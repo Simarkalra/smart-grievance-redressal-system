@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capestone.grievance.Entity.Grievance;
 import com.capestone.grievance.Entity.User;
+import com.capestone.grievance.GrievanceApplication;
+import com.capestone.grievance.Repository.GrievanceRepository;
 import com.capestone.grievance.Repository.UserRepository;
 import com.capestone.grievance.Service.GrievanceService;
 
@@ -26,39 +29,43 @@ public class GrievanceController {
      @Autowired 
     public  UserRepository userRep;
 
-    @PostMapping("/register")
+    @PostMapping
     public Grievance RegisterGrievance(@RequestBody Grievance griev) {
-      return grievService.RegisterGrievance(griev);
+      return grievService.registerGrievance(griev);
     }
 
-    @GetMapping("/student/{studentId}")
-public List<Grievance> getGrievByStudent(@PathVariable Long studentId){
-   
-    User student = userRep.findById(studentId).orElseThrow();
-    return grievService.getGrievanceByStudent(student);
+    @GetMapping("/{id}")
+public Grievance getGrievById(@PathVariable Long id){
+    User student = userRep.findById(id).orElseThrow();
+    return grievService.getGrievanceById(id);
 }
+
+@PutMapping("/{id}/status")
+    public Grievance updateStatus(
+            @PathVariable Long id,
+            @RequestParam Grievance.Status status) {
+
+        return grievService.updateStatus(id, status);
+    }
+
+    @PutMapping("/{id}/resolve")
+    public Grievance resolveGrievance(@PathVariable Long id) {
+        return grievService.resolveGrievance(id);
+    }
 
 
      @GetMapping
     public List<Grievance> getAllGrievances() {
         return grievService.getAllGrievances();
     }
-     @GetMapping("/assignee/{assigneeId}")
-    public  List<Grievance> getGrievByAssignee(@PathVariable Long assigneeId){
-         User Assignee = userRep.findById(assigneeId).orElseThrow();
-        return grievService.getGrievanceByAssignee(Assignee);
-    }
+    
 
-     @GetMapping("/supervisor/{supervisorId}")
-  
-    public  List<Grievance> getGrievBySupervisor(@PathVariable Long supervisorId){
-         User Supervisor = userRep.findById(supervisorId).orElseThrow();
-        return grievService.getGrievanceBySupervisor(Supervisor);
-    }
+    
+
 
     @PutMapping("/resolve/{id}")
       public Grievance ResolveGrievance( @PathVariable Long id){
-        return grievService.ResolveGrievance(id);
+        return grievService.resolveGrievance(id);
       }
 
      @DeleteMapping("/{grievanceId}")

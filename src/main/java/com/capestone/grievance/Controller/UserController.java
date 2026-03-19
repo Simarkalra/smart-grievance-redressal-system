@@ -24,25 +24,14 @@ public class UserController {
     }
 
   
- @PutMapping("/{id}/assignrole")
-public User AssignRole(@PathVariable Long id, @RequestParam String role){
-    return userService.AssignRole(id, role);
-}
-
-   @PostMapping("/login")
-public Optional<User> loginUser(@RequestBody User user){
-    return userService.ValidateUser(user.getUsername(), user.getPassword());
-}
-
+ 
+ 
    @GetMapping
     public List<User> getAllUsers(){
         return userService.GetAllUser();
     }
 
-   @PutMapping("/{id}/role")
-    public Optional<User> UpdateRole(@PathVariable Long id,@RequestParam String role){
-        return  userService.UpdateRole(id,role);
-    }
+  
 
      @DeleteMapping("/{id}")
     public boolean deleteUser(@PathVariable Long id){

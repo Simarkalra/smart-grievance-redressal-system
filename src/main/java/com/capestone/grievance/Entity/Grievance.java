@@ -1,66 +1,137 @@
 package com.capestone.grievance.Entity;
+
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
-import lombok.Data;
 
-
-
-@Data
 @Entity
+public class Grievance {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-
-public class Grievance{
-@Id
- @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private  Long id;
-    private String category;
     private String description;
 
+    private LocalDateTime createdAt;
 
+    private LocalDateTime resolutionDeadline;
 
-    private String  status;  // submittted, in-progress , resolved
-    private String priority; //high, medium, low
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
 
- @ManyToOne
-  @JoinColumn(name="student_id")
-    private User student;
-     @ManyToOne
-      @JoinColumn(name="assignee_id")
-    private User assignee;
-     @ManyToOne
-      @JoinColumn(name="supervisor_id")
-    private User supervisor;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
-   public String getStatus(){
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "reported_by")
+    private User reportedBy;
+
+    @ManyToOne
+@JoinColumn(name = "assignee_type_id")
+private AssigneeType assigneeType;
+
+    // Default constructor (required by JPA)
+    public Grievance() {}
+
+    // ===== Getters =====
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getResolutionDeadline() {
+        return resolutionDeadline;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status){
-       this.status=status;
+    public Category getCategory() {
+        return category;
     }
 
-    
-   public User getStudent() {
-        return student;
+    public User getReportedBy() {
+        return reportedBy;
     }
 
-  public void setStudent(User student) {
-        this.student = student;
+   private AssigneeType getAssigneeType() {
+    return assigneeType;
+}
+
+public void setAssigneeType(AssigneeType assigneeType) {
+    this.assigneeType = assigneeType;
+}
+    // ===== Setters =====
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public User getAssignee() {
-        return assignee;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setResolutionDeadline(LocalDateTime resolutionDeadline) {
+        this.resolutionDeadline = resolutionDeadline;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setReportedBy(User reportedBy) {
+        this.reportedBy = reportedBy;
+    }
+
+   
+    // ===== ENUMS =====
+
+    public enum Status {
+        PENDING,
+        IN_PROGRESS,
+        RESOLVED,
+        REJECTED
+    }
+
+    public enum Priority {
+        LOW,
+        MEDIUM,
+        HIGH,
+        CRITICAL
     }
 
     public void setAssignee(User assignee) {
-        this.assignee = assignee;
-    }
-
-    public User getSupervisor() {
-        return supervisor;
-    }
-
-    public void setSupervisor(User supervisor) {
-        this.supervisor = supervisor;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setAssignee'");
     }
 }
