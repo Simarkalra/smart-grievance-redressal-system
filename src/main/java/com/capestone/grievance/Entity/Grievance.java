@@ -26,8 +26,8 @@ public class Grievance {
     @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToOne
-@JoinColumn(name = "created_by")
-private User createdBy;
+    @JoinColumn(name = "created_by")
+    private User createdBy;
 
 
     @ManyToOne
@@ -38,30 +38,29 @@ private User createdBy;
     @JoinColumn(name = "reported_by")
     private User reportedBy;
 
+    @ManyToOne
+    @JoinColumn(name = "assignee_id")
+    private User assignee;
 
     @ManyToOne
-@JoinColumn(name = "assignee_id")
-private User assignee;
-
-@ManyToOne
-@JoinColumn(name = "organization_id")
-private Organization organization;
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     @ManyToOne
-@JoinColumn(name = "assignee_type_id")
-private AssigneeType assigneeType;
+    @JoinColumn(name = "assignee_type_id")
+    private AssigneeType assigneeType;
 
     // Default constructor (required by JPA)
     public Grievance() {}
 
     // ===== Getters =====
     public User getAssignee() {
-    return assignee;
-}
+        return assignee;
+    }
 
-public void setAssignee(User assignee) {
-    this.assignee = assignee;
-}
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
 
     public Long getId() {
         return id;
@@ -95,13 +94,13 @@ public void setAssignee(User assignee) {
         return reportedBy;
     }
 
-   private AssigneeType getAssigneeType() {
-    return assigneeType;
-}
+    public AssigneeType getAssigneeType() {
+        return assigneeType;
+    }
 
-public void setAssigneeType(AssigneeType assigneeType) {
-    this.assigneeType = assigneeType;
-}
+    public void setAssigneeType(AssigneeType assigneeType) {
+        this.assigneeType = assigneeType;
+    }
     // ===== Setters =====
 
     public void setId(Long id) {
@@ -136,31 +135,18 @@ public void setAssigneeType(AssigneeType assigneeType) {
         this.reportedBy = reportedBy;
     }
 
-   
-    // ===== ENUMS =====
-
-    public enum Status {
-        PENDING,
-        IN_PROGRESS,
-        RESOLVED,
-        REJECTED
-    }
-
-    public enum Priority {
-        LOW,
-        MEDIUM,
-        HIGH,
-        CRITICAL
-    }
-
     public String getCustomTitle() {
- return customTitle;
+        return customTitle;
     }
 
-   
+    public void setCustomTitle(String customTitle) {
+        this.customTitle = customTitle;
+    }
 
-    
+    public Organization getOrganization() {
+        return organization;
+    }
 
-   
-
-}
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }

@@ -12,20 +12,21 @@ public class Category {
     private String name;
 
     @ManyToOne
-  @JoinColumn(name = "assignee_type_id")
-    public AssigneeType assigneeType;
+    @JoinColumn(name = "assignee_type_id")
+    private AssigneeType assigneeType;
 
-public Category() {
-}
-    public Category(String name, AssigneeType assigneeType){
-        this.name=name;
-        this.assigneeType=assigneeType;
+    public Category() {
+    }
+    public Category(String name, AssigneeType assigneeType) {
+        this.name = name;
+        this.assigneeType = assigneeType;
     }
 
     public Category(AssigneeType assigneeType) {
         this.assigneeType = assigneeType;
     }
-     public AssigneeType getAssigneeType() {
+
+    public AssigneeType getAssigneeType() {
         return assigneeType;
     }
 
@@ -34,16 +35,14 @@ public Category() {
     }
 
     public Long getId() {
-    return id;
-}
+        return id;
+    }
 
-public String getName() {
-    return name;
-}
+    public String getName() {
+        return name;
+    }
 
-public void setName(String name) {
-    this.name = name;
-}
-
-
+    public void setName(String name) {
+        this.name = name;
+    }
 }

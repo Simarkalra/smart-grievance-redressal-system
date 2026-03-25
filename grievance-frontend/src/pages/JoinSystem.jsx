@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 
 export default function JoinSystem() {
 
@@ -12,8 +12,8 @@ export default function JoinSystem() {
 
   const handleRegister = async () => {
     try {
-      await axios.post(
-        `http://localhost:8080/user/register-with-org?orgId=${data.orgId}`,
+      await API.post(
+        `/user/register-with-org?orgId=${data.orgId}`,
         {
           username: data.username,
           password: data.password,

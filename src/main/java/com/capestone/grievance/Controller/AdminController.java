@@ -25,15 +25,18 @@ import com.capestone.grievance.Repository.UserRepository;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/admin")
 public class AdminController {
-    
-@Autowired
-public AssigneeTypeRepository assigneeTypeRepository;
-@Autowired
-public CategoryRepository categoryRepository;
-@Autowired
-public KeywordRuleRepository keywordRuleRepository;
-@Autowired
-public  UserRepository userRepository;
+
+    @Autowired
+    private AssigneeTypeRepository assigneeTypeRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private KeywordRuleRepository keywordRuleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 @PostMapping("/assignee-types")
     public AssigneeType createAssigneeType(@RequestBody AssigneeType type){
         return assigneeTypeRepository.save(type);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 
 export default function CreateGrievance() {
   const [categories, setCategories] = useState([]);
@@ -8,10 +8,8 @@ export default function CreateGrievance() {
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
 
-  // ✅ Fetch categories from backend
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/categories") // change if needed
+    API.get("/categories")
       .then((res) => setCategories(res.data))
       .catch((err) => {
         console.error(err);
@@ -19,7 +17,6 @@ export default function CreateGrievance() {
       });
   }, []);
 
-  // ✅ Handle Submit
   const handleSubmit = async () => {
     try {
       let payload;
@@ -36,14 +33,10 @@ export default function CreateGrievance() {
         };
       }
 
-      await axios.post(
-        "http://localhost:8080/grievance/create",
-        payload
-      );
+      await API.post("/grievance/create", payload);
 
       setMessage("Grievance submitted successfully!");
 
-      // reset form
       setSelected("");
       setTitle("");
       setDescription("");
@@ -54,7 +47,6 @@ export default function CreateGrievance() {
     }
   };
 
-  // ✅ Validation
   const isValid =
     selected === "Other"
       ? title.trim() && description.trim()
@@ -65,7 +57,6 @@ export default function CreateGrievance() {
       <div className="card">
         <h2>Create Grievance</h2>
 
-        {/* 🔽 Category Dropdown */}
         <select
           value={selected}
           onChange={(e) => {
@@ -78,24 +69,20 @@ export default function CreateGrievance() {
         >
           <option value="">Select Issue</option>
 
-          {/* Dynamic categories */}
-        {categories.map((cat) => (
-  <option key={cat.id} value={cat.id}>
-    {cat.name}
-  </option>
-))}
-          {/* Other option */}
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
           <option value="Other">Other</option>
         </select>
 
-        {/* 📝 Description box - always shown */}
         <textarea
           placeholder="Describe your issue"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        {/* 📝 Other → title */}
         {selected === "Other" && (
           <input
             placeholder="Enter Title"
@@ -104,12 +91,10 @@ export default function CreateGrievance() {
           />
         )}
 
-        {/* 🚀 Submit */}
         <button disabled={!isValid} onClick={handleSubmit}>
           Submit
         </button>
 
-        {/* ✅ Success Message */}
         {message && <p style={{ color: "green" }}>{message}</p>}
       </div>
     </div>

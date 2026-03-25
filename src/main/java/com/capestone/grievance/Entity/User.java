@@ -13,14 +13,13 @@ public class User {
     private String password;
     private String role;
 
-    // 🔥 ADD THIS FIELD
     @ManyToOne
     @JoinColumn(name = "assignee_type_id")
     private AssigneeType assigneeType;
 
     @ManyToOne
-@JoinColumn(name = "organization_id")
-private Organization organization;
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     public User() {}
 
@@ -74,10 +73,10 @@ private Organization organization;
     }
 
     public Organization getOrganization() {
-    return organization;
-}
+        return organization;
+    }
 
-public void setOrganization(Organization organization) {
-    this.organization = organization;
-}
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
 }

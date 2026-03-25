@@ -17,7 +17,6 @@ export default function CreateGrievance() {
   const [categories, setCategories] = useState(defaultCategories);
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  // 🔥 FETCH categories from backend
   useEffect(() => {
     API.get("/admin/categories")
       .then((res) => {
@@ -33,12 +32,10 @@ export default function CreateGrievance() {
       });
   }, []);
 
-  // 🔥 SUBMIT
   const submit = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
 
-      // Build payload per user selection
       const payload = {
         description: data.description,
         user: { id: user.id }
@@ -50,20 +47,7 @@ export default function CreateGrievance() {
         payload.category = { id: selectedCategory };
       }
 
-      // try both possible endpoints if one fails, to handle backend routes
-      const endpoints = ["/grievance/create", "/grievances"];
-      let response;
-      for (const ep of endpoints) {
-        try {
-          response = await API.post(ep, payload);
-          break;
-        } catch (err) {
-          if (err.response && err.response.status === 404) continue;
-          throw err; // for 500 etc, abort
-        }
-      }
-
-      if (!response) throw new Error("No endpoint available");
+      await API.post("/grievance/create", payload);
 
       alert("Grievance submitted!");
       setSelectedCategory("");
@@ -84,7 +68,6 @@ export default function CreateGrievance() {
     <div style={{ padding: 20 }}>
       <h2>Create Grievance</h2>
 
-      {/* 🔥 CAT / OTHER SELECT */}
       <select
         value={selectedCategory}
         onChange={(e) => {
@@ -108,7 +91,6 @@ export default function CreateGrievance() {
       <br />
       <br />
 
-      {/* title only for Other */}
       {isOther && (
         <>
           <input

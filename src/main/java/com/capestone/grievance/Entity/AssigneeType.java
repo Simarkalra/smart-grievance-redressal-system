@@ -14,7 +14,6 @@ public class AssigneeType {
 
     private String name;
 
-    // ✅ REQUIRED by Jackson
     public AssigneeType() {
     }
 

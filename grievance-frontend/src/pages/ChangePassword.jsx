@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 
 function ChangePassword() {
   const [username, setUsername] = useState("");
@@ -9,15 +9,12 @@ function ChangePassword() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "http://localhost:8080/user/change-password",
-        {
-          username,
-          password,
-        }
-      );
+      const res = await API.post("/user/change-password", {
+        username,
+        password,
+      });
 
-      alert(res.data); // success message
+      alert(res.data);
     } catch (err) {
       console.log(err);
       alert("Error changing password");

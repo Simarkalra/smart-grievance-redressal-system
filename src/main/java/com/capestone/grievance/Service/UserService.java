@@ -13,48 +13,42 @@ import com.capestone.grievance.Repository.UserRepository;
 
 @Service
 public class UserService {
- 
-@Autowired
-public  UserRepository UserRep;
 
-public User RegisterUser(User user){
+    @Autowired
+    private UserRepository userRepository;
 
-    if("ADMIN".equals(user.getRole())) {
+    public User registerUser(User user) {
 
-        User existingAdmin = UserRep.findByRoleAndOrganization("ADMIN", user.getOrganization());
+        if("ADMIN".equals(user.getRole())) {
 
-        if(existingAdmin != null) {
-            throw new RuntimeException("Admin already exists for this organization!");
+            User existingAdmin = userRepository.findByRoleAndOrganization("ADMIN", user.getOrganization());
+
+            if(existingAdmin != null) {
+                throw new RuntimeException("Admin already exists for this organization!");
+            }
         }
+
+        return userRepository.save(user);
     }
 
-    return UserRep.save(user); 
-}
-
-
-
-public User findByUsername(String username) {
-    return UserRep.findByUsername(username);
-}
-
-
-
-
-public List<User> GetAllUser(){
-    return UserRep.findAll();
-}
-
-
-public boolean DeleteUser(Long id){
-    if(UserRep.existsById(id)){
-        UserRep.deleteById(id);
-       return true;
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
-    return false;
-}
 
-public User updateUser(User user){
-    return UserRep.save(user);
-}
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public boolean deleteUser(Long id) {
+        if(userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
 
 }

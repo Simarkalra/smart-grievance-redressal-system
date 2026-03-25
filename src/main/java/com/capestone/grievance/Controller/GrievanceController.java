@@ -28,8 +28,9 @@ import com.capestone.grievance.Service.GrievanceService;
 public class GrievanceController {
     @Autowired
     GrievanceService grievService;
-     @Autowired 
-    public  UserRepository userRep;
+
+    @Autowired
+    private UserRepository userRep;
 
     @PostMapping
     public Grievance registerGrievance(@RequestBody Grievance griev) {
@@ -43,11 +44,11 @@ public class GrievanceController {
     }
 
     @GetMapping("/{id}")
-public Grievance getGrievById(@PathVariable Long id){
-    return grievService.getGrievanceById(id);
-}
+    public Grievance getGrievById(@PathVariable Long id) {
+        return grievService.getGrievanceById(id);
+    }
 
-@PutMapping("/{id}/status")
+    @PutMapping("/{id}/status")
     public Grievance updateStatus(
             @PathVariable Long id,
             @RequestParam Grievance.Status status) {
@@ -60,29 +61,20 @@ public Grievance getGrievById(@PathVariable Long id){
         return grievService.resolveGrievance(id);
     }
 
-
-     @GetMapping
+    @GetMapping
     public List<Grievance> getAllGrievances() {
         return grievService.getAllGrievances();
     }
-    
+
     @GetMapping("/assignee/{id}")
-public List<Grievance> getByAssignee(@PathVariable Long id) {
-    return grievService.getByAssignee(id);
-}
+    public List<Grievance> getByAssignee(@PathVariable Long id) {
+        return grievService.getByAssignee(id);
+    }
 
-    
-
-
-    @PutMapping("/resolve/{id}")
-      public Grievance ResolveGrievance( @PathVariable Long id){
-        return grievService.resolveGrievance(id);
-      }
-
-     @DeleteMapping("/{grievanceId}")
-     public void deleteGrievance(@PathVariable Long grievanceId) {
-         grievService.deleteGrievance(grievanceId);
-     }
+    @DeleteMapping("/{grievanceId}")
+    public void deleteGrievance(@PathVariable Long grievanceId) {
+        grievService.deleteGrievance(grievanceId);
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleBadRequest(IllegalArgumentException ex) {

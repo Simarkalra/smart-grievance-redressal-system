@@ -155,9 +155,8 @@ public class GrievanceService {
     setResolutionDeadline(grievance);
 
     grievance.setStatus(Grievance.Status.PENDING);
-    
 
-    // 🔥 AUTO ASSIGN
+
     AssigneeType assigneeType = category.getAssigneeType();
 
     if (assigneeType == null) {

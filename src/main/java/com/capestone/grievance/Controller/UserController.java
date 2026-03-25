@@ -28,9 +28,9 @@ private OrganizationRepository organizationRepository;
     @Autowired
     private UserService userService;
     
-     @PostMapping("/register")
+@PostMapping("/register")
     public User RegisterUser(@RequestBody User user){
-        return userService.RegisterUser(user);
+        return userService.registerUser(user);
     }
 
 
@@ -41,23 +41,23 @@ private OrganizationRepository organizationRepository;
 @PostMapping("/create-organization")
 public ResponseEntity<?> createOrganization(@RequestBody User user) {
 
-    // 🔥 1. Create organization
+    // Create organization
     Organization org = new Organization();
     org.setName(user.getUsername() + "_org");
 
     organizationRepository.save(org);
 
-    // 🔥 2. Create admin
+    // Create admin
     user.setRole("ADMIN");
     user.setOrganization(org);
 
-    userService.RegisterUser(user);
+    userService.registerUser(user);
 
     Map<String, Object> response = new HashMap<>();
-response.put("message", "Organization created");
-response.put("orgId", org.getId());
+    response.put("message", "Organization created");
+    response.put("orgId", org.getId());
 
-return ResponseEntity.ok(response);
+    return ResponseEntity.ok(response);
 }
 
 @PostMapping("/register-with-org")
@@ -70,7 +70,7 @@ public ResponseEntity<?> registerUserWithOrg(
 
     user.setOrganization(org);
 
-    return ResponseEntity.ok(userService.RegisterUser(user));
+    return ResponseEntity.ok(userService.registerUser(user));
 }
 
 
@@ -84,7 +84,7 @@ public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest reque
     }
 
     existingUser.setPassword(request.getPassword());
-    userService.RegisterUser(existingUser);
+    userService.updateUser(existingUser);
 
     return ResponseEntity.ok("Password updated successfully");
 }
@@ -102,16 +102,14 @@ public User login(@RequestBody User user) {
     throw new RuntimeException("Invalid credentials");
 }
  
-   @GetMapping
+    @GetMapping
     public List<User> getAllUsers(){
-        return userService.GetAllUser();
+        return userService.getAllUsers();
     }
 
-  
-
-     @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public boolean deleteUser(@PathVariable Long id){
-        return userService.DeleteUser(id);
+        return userService.deleteUser(id);
     }
 
 
