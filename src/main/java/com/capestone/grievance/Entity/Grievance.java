@@ -150,3 +150,18 @@ public class Grievance {
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
+
+    public static enum Status {
+        PENDING,
+        IN_PROGRESS,
+        RESOLVED,
+        REJECTED
+    }
+
+    public static enum Priority {
+        LOW,
+        MEDIUM,
+        HIGH,
+        CRITICAL
+    }
+}
