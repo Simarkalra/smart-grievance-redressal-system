@@ -1,0 +1,3 @@
+<BrowserRouter>
+  <Navbar />
+  <Routes></Routes>
