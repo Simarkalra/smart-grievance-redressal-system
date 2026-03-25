@@ -18,9 +18,24 @@ public class UserService {
 public  UserRepository UserRep;
 
 public User RegisterUser(User user){
-    return UserRep.save(user);
+
+    if("ADMIN".equals(user.getRole())) {
+
+        User existingAdmin = UserRep.findByRoleAndOrganization("ADMIN", user.getOrganization());
+
+        if(existingAdmin != null) {
+            throw new RuntimeException("Admin already exists for this organization!");
+        }
+    }
+
+    return UserRep.save(user); 
 }
 
+
+
+public User findByUsername(String username) {
+    return UserRep.findByUsername(username);
+}
 
 
 
@@ -37,4 +52,9 @@ public boolean DeleteUser(Long id){
     }
     return false;
 }
+
+public User updateUser(User user){
+    return UserRep.save(user);
+}
+
 }

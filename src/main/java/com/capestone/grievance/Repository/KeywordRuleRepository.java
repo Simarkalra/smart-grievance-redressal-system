@@ -9,10 +9,6 @@ import com.capestone.grievance.Entity.KeywordRule;
 
 public interface KeywordRuleRepository extends JpaRepository<KeywordRule, Long>{
 
-    static List<KeywordRule> findByCategory(Category category) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByCategory'");
-    }
-    
-    
+    List<KeywordRule> findByCategory(Category category);
+
 }

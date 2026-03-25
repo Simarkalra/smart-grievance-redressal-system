@@ -20,8 +20,15 @@ public class Grievance {
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
+
+    private String customTitle;
+
     @Enumerated(EnumType.STRING)
     private Status status;
+    @ManyToOne
+@JoinColumn(name = "created_by")
+private User createdBy;
+
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -31,6 +38,15 @@ public class Grievance {
     @JoinColumn(name = "reported_by")
     private User reportedBy;
 
+
+    @ManyToOne
+@JoinColumn(name = "assignee_id")
+private User assignee;
+
+@ManyToOne
+@JoinColumn(name = "organization_id")
+private Organization organization;
+
     @ManyToOne
 @JoinColumn(name = "assignee_type_id")
 private AssigneeType assigneeType;
@@ -39,6 +55,13 @@ private AssigneeType assigneeType;
     public Grievance() {}
 
     // ===== Getters =====
+    public User getAssignee() {
+    return assignee;
+}
+
+public void setAssignee(User assignee) {
+    this.assignee = assignee;
+}
 
     public Long getId() {
         return id;
@@ -130,8 +153,14 @@ public void setAssigneeType(AssigneeType assigneeType) {
         CRITICAL
     }
 
-    public void setAssignee(User assignee) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setAssignee'");
+    public String getCustomTitle() {
+ return customTitle;
     }
+
+   
+
+    
+
+   
+
 }

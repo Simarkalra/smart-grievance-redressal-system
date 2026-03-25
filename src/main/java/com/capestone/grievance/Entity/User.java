@@ -18,6 +18,10 @@ public class User {
     @JoinColumn(name = "assignee_type_id")
     private AssigneeType assigneeType;
 
+    @ManyToOne
+@JoinColumn(name = "organization_id")
+private Organization organization;
+
     public User() {}
 
     public User(String username, String password, String role, AssigneeType assigneeType) {
@@ -68,4 +72,12 @@ public class User {
     public void setAssigneeType(AssigneeType assigneeType) {
         this.assigneeType = assigneeType;
     }
+
+    public Organization getOrganization() {
+    return organization;
+}
+
+public void setOrganization(Organization organization) {
+    this.organization = organization;
+}
 }

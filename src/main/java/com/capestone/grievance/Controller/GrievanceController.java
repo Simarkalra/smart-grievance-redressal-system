@@ -3,7 +3,11 @@ package com.capestone.grievance.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,15 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capestone.grievance.Entity.Grievance;
-import com.capestone.grievance.Entity.User;
-import com.capestone.grievance.GrievanceApplication;
-import com.capestone.grievance.Repository.GrievanceRepository;
 import com.capestone.grievance.Repository.UserRepository;
 import com.capestone.grievance.Service.GrievanceService;
 
 
 @RestController
-@RequestMapping("/grievances")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping({"/grievances", "/grievance"})
 public class GrievanceController {
     @Autowired
     GrievanceService grievService;
@@ -30,13 +32,18 @@ public class GrievanceController {
     public  UserRepository userRep;
 
     @PostMapping
-    public Grievance RegisterGrievance(@RequestBody Grievance griev) {
+    public Grievance registerGrievance(@RequestBody Grievance griev) {
+      return grievService.registerGrievance(griev);
+    }
+
+    // Compatibility path used by some frontend clients
+    @PostMapping("/create")
+    public Grievance createGrievance(@RequestBody Grievance griev) {
       return grievService.registerGrievance(griev);
     }
 
     @GetMapping("/{id}")
 public Grievance getGrievById(@PathVariable Long id){
-    User student = userRep.findById(id).orElseThrow();
     return grievService.getGrievanceById(id);
 }
 
@@ -59,6 +66,10 @@ public Grievance getGrievById(@PathVariable Long id){
         return grievService.getAllGrievances();
     }
     
+    @GetMapping("/assignee/{id}")
+public List<Grievance> getByAssignee(@PathVariable Long id) {
+    return grievService.getByAssignee(id);
+}
 
     
 
@@ -73,5 +84,9 @@ public Grievance getGrievById(@PathVariable Long id){
          grievService.deleteGrievance(grievanceId);
      }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleBadRequest(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 
 }

@@ -12,6 +12,7 @@ import com.capestone.grievance.Entity.Category;
 import com.capestone.grievance.Entity.Grievance;
 import com.capestone.grievance.Entity.KeywordRule;
 import com.capestone.grievance.Entity.User;
+import com.capestone.grievance.Repository.CategoryRepository;
 import com.capestone.grievance.Repository.GrievanceRepository;
 import com.capestone.grievance.Repository.KeywordRuleRepository;
 import com.capestone.grievance.Repository.UserRepository;
@@ -28,13 +29,20 @@ public class GrievanceService {
     @Autowired
     private KeywordRuleRepository keywordRuleRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+
+    public List<Grievance> getByAssignee(Long assigneeId) {
+    return grievanceRepository.findByAssigneeId(assigneeId);
+}
     // Assign priority based on keyword
     private void assignPriority(Grievance grievance) {
 
     Category category = grievance.getCategory();
     String description = grievance.getDescription().toLowerCase();
 
-    List<KeywordRule> rules = KeywordRuleRepository.findByCategory(category);
+    List<KeywordRule> rules = keywordRuleRepository.findByCategory(category);
 
     boolean match = false;
 
@@ -120,8 +128,22 @@ public class GrievanceService {
     public Grievance registerGrievance(Grievance grievance) {
 
     // Validate category
-    if (grievance.getCategory() == null) {
-        throw new RuntimeException("Category is required");
+   if (grievance.getCategory() == null && 
+    (grievance.getCustomTitle() == null || ((String) grievance.getCustomTitle()).isEmpty())) {
+    throw new IllegalArgumentException("Either category or custom title is required");
+}
+
+    Category category = grievance.getCategory();
+    Long categoryId = category.getId();
+
+    if (category.getAssigneeType() == null && categoryId != null) {
+        category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found for id=" + categoryId));
+        grievance.setCategory(category);
+    }
+
+    if (category.getAssigneeType() == null) {
+        throw new IllegalArgumentException("AssigneeType not set for category");
     }
 
     grievance.setCreatedAt(LocalDateTime.now());
@@ -133,20 +155,19 @@ public class GrievanceService {
     setResolutionDeadline(grievance);
 
     grievance.setStatus(Grievance.Status.PENDING);
+    
 
     // 🔥 AUTO ASSIGN
-    Category category = grievance.getCategory();
-
     AssigneeType assigneeType = category.getAssigneeType();
 
     if (assigneeType == null) {
-        throw new RuntimeException("AssigneeType not set for category");
+        throw new IllegalArgumentException("AssigneeType not set for category");
     }
 
     User assignee = userRepository.findFirstByAssigneeType(assigneeType);
 
     if (assignee == null) {
-        throw new RuntimeException("No user found for this assignee type");
+        throw new IllegalArgumentException("No user found for this assignee type");
     }
 
     grievance.setAssignee(assignee);
