@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../api/api";
+import Modal from "../components/Modal";
 
 export default function CreateGrievance() {
 
+  const navigate = useNavigate();
   const [data, setData] = useState({
     title: "",
     description: ""
@@ -16,6 +19,7 @@ export default function CreateGrievance() {
 
   const [categories, setCategories] = useState(defaultCategories);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [modal, setModal] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
   useEffect(() => {
     API.get("/admin/categories")
@@ -49,13 +53,25 @@ export default function CreateGrievance() {
 
       await API.post("/grievance/create", payload);
 
-      alert("Grievance submitted!");
-      setSelectedCategory("");
-      setData({ title: "", description: "" });
+      setModal({
+        isOpen: true,
+        title: "Success!",
+        message: "Grievance submitted successfully!",
+        type: "success"
+      });
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
 
     } catch (err) {
       console.error("Submission error", err);
-      alert("Error submitting grievance");
+      setModal({
+        isOpen: true,
+        title: "Error",
+        message: "Error submitting grievance. Please try again.",
+        type: "error"
+      });
     }
   };
 
@@ -115,6 +131,22 @@ export default function CreateGrievance() {
       <button onClick={submit} disabled={isSubmitDisabled}>
         Submit
       </button>
+      <button onClick={() => navigate("/dashboard")} style={{ marginLeft: 10 }}>
+        Cancel
+      </button>
+
+      <Modal
+        isOpen={modal.isOpen}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+        onClose={() => {
+          setModal({ ...modal, isOpen: false });
+          if (modal.type === "success") {
+            navigate("/dashboard");
+          }
+        }}
+      />
     </div>
   );
 }
