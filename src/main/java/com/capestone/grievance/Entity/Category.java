@@ -11,6 +11,22 @@ public class Category {
 
     private String name;
 
+    @Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Category)) return false;
+    Category c = (Category) o;
+    return id != null && id.equals(c.id);
+}
+
+@Override
+public int hashCode() {
+    return getClass().hashCode();
+}
+
+@ManyToOne
+private Organization organization;
+
     @ManyToOne
     @JoinColumn(name = "assignee_type_id")
     private AssigneeType assigneeType;
@@ -44,5 +60,8 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public void setOrganization(Organization org) {
+      this.organization=org;
     }
 }

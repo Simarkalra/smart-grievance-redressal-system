@@ -5,49 +5,72 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.capestone.grievance.Entity.Grievance;
-import com.capestone.grievance.Repository.UserRepository;
 import com.capestone.grievance.Service.GrievanceService;
-
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping({"/grievances", "/grievance"})
+@RequestMapping("/grievances")
 public class GrievanceController {
-    @Autowired
-    GrievanceService grievService;
 
     @Autowired
-    private UserRepository userRep;
+    private GrievanceService grievService;
 
+    @ExceptionHandler(Exception.class)
+public ResponseEntity<String> handleAll(Exception ex) {
+    ex.printStackTrace(); // 🔥 PRINT REAL ERROR
+    return ResponseEntity.status(500).body(ex.getMessage());
+}
+    // ✅ Create grievance (MAIN API)
     @PostMapping
-    public Grievance registerGrievance(@RequestBody Grievance griev) {
-      return grievService.registerGrievance(griev);
+    public Grievance registerGrievance(
+            @RequestBody Grievance griev,
+            @RequestParam Long userId) {
+
+        return grievService.registerGrievance(griev, userId);
     }
 
-    // Compatibility path used by some frontend clients
+
+
+    // ✅ (Optional backward compatibility)
     @PostMapping("/create")
-    public Grievance createGrievance(@RequestBody Grievance griev) {
-      return grievService.registerGrievance(griev);
+    public Grievance createGrievance(
+            @RequestBody Grievance griev,
+            @RequestParam Long userId) {
+
+        return grievService.registerGrievance(griev, userId);
     }
 
+    // ✅ Get grievances created by user (My Grievances)
+    @GetMapping("/reported/{id}")
+    public List<Grievance> getByReportedUser(@PathVariable Long id) {
+        return grievService.getByReportedUser(id);
+    }
+
+    // ✅ Get grievances assigned to assignee
+    @GetMapping("/assignee/{id}")
+public List<Grievance> getByAssignee(
+        @PathVariable Long id,
+        @RequestParam Long orgId) {
+
+    return grievService.getByAssignee(id, orgId);
+}
+
+    // ✅ Get all grievances
+    @GetMapping
+    public List<Grievance> getAllGrievances() {
+        return grievService.getAllGrievances();
+    }
+
+    // ✅ Get grievance by id
     @GetMapping("/{id}")
     public Grievance getGrievById(@PathVariable Long id) {
         return grievService.getGrievanceById(id);
     }
 
+    // ✅ Update status
     @PutMapping("/{id}/status")
     public Grievance updateStatus(
             @PathVariable Long id,
@@ -56,29 +79,24 @@ public class GrievanceController {
         return grievService.updateStatus(id, status);
     }
 
+    // ✅ Resolve grievance
     @PutMapping("/{id}/resolve")
     public Grievance resolveGrievance(@PathVariable Long id) {
         return grievService.resolveGrievance(id);
     }
 
-    @GetMapping
-    public List<Grievance> getAllGrievances() {
-        return grievService.getAllGrievances();
-    }
-
-    @GetMapping("/assignee/{id}")
-    public List<Grievance> getByAssignee(@PathVariable Long id) {
-        return grievService.getByAssignee(id);
-    }
-
+    // ✅ Delete grievance
     @DeleteMapping("/{grievanceId}")
     public void deleteGrievance(@PathVariable Long grievanceId) {
         grievService.deleteGrievance(grievanceId);
     }
+@GetMapping("/test")
+public String test() {
+    return "Working";}
 
+    // ✅ Exception handler
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleBadRequest(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
-
 }

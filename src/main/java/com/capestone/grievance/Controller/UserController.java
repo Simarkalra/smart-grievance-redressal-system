@@ -12,7 +12,9 @@ import java.util.Optional;
 import com.capestone.grievance.Entity.ChangePasswordRequest;
 import com.capestone.grievance.Entity.Organization;
 import com.capestone.grievance.Entity.User;
+import com.capestone.grievance.Entity.AssigneeType;
 import com.capestone.grievance.Repository.OrganizationRepository;
+import com.capestone.grievance.Repository.AssigneeTypeRepository;
 import com.capestone.grievance.Service.UserService;
 
 
@@ -24,6 +26,9 @@ public class UserController {
 
 @Autowired
 private OrganizationRepository organizationRepository;
+
+@Autowired
+private AssigneeTypeRepository assigneeTypeRepository;
    
     @Autowired
     private UserService userService;
@@ -39,25 +44,33 @@ private OrganizationRepository organizationRepository;
 
 
 @PostMapping("/create-organization")
-public ResponseEntity<?> createOrganization(@RequestBody User user) {
+public ResponseEntity<?> createOrganization(@RequestBody Map<String, String> request) {
 
-    // Create organization
+    String orgName = request.get("name");
+
     Organization org = new Organization();
-    org.setName(user.getUsername() + "_org");
-
+    org.setName(orgName);
     organizationRepository.save(org);
 
-    // Create admin
-    user.setRole("ADMIN");
-    user.setOrganization(org);
+    // Create admin user for this organization
+    String adminUsername = "admin_" + org.getId();
+    String adminPassword = "admin123"; // Default password
+    
+    User adminUser = new User();
+    adminUser.setUsername(adminUsername);
+    adminUser.setPassword(adminPassword);
+    adminUser.setRole("ADMIN");
+    adminUser.setOrganization(org);
+    userService.registerUser(adminUser);
 
-    userService.registerUser(user);
-
+    // Return response in expected format
     Map<String, Object> response = new HashMap<>();
-    response.put("message", "Organization created");
     response.put("orgId", org.getId());
-
-    return ResponseEntity.ok(response);
+    response.put("adminUsername", adminUsername);
+    response.put("adminPassword", adminPassword);
+    response.put("organizationName", org.getName());
+    
+   return ResponseEntity.ok(response);
 }
 
 @PostMapping("/register-with-org")
@@ -90,16 +103,43 @@ public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest reque
 }
 
 @PostMapping("/login")
-public User login(@RequestBody User user) {
+public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+    String username = request.get("username");
+String password = request.get("password");
+String orgIdStr = request.get("organizationId");
+Long orgId;
 
-    User existingUser = userService.findByUsername(user.getUsername());
+try {
+    orgId = Long.parseLong(orgIdStr);
+} catch (Exception e) {
+    return ResponseEntity.status(400).body("Invalid organization ID");
+}
 
-    if (existingUser != null &&
-        existingUser.getPassword().equals(user.getPassword())) {
-        return existingUser;
+    
+
+    // ✅ FIX: fetch user WITH org
+    Organization org = organizationRepository.findById(orgId)
+            .orElseThrow(() -> new RuntimeException("Organization not found"));
+
+    User existingUser = userService.findByUsernameAndOrganization(username, org);
+
+    if (existingUser == null) {
+        return ResponseEntity.status(401).body("User not found in this organization");
     }
 
-    throw new RuntimeException("Invalid credentials");
+    if (!existingUser.getPassword().equals(password)) {
+        return ResponseEntity.status(401).body("Invalid password");
+    }
+
+    // ✅ Response
+    Map<String, Object> response = new HashMap<>();
+    response.put("id", existingUser.getId());
+    response.put("username", existingUser.getUsername());
+    response.put("role", existingUser.getRole());
+    response.put("organizationId", org.getId());
+    response.put("organizationName", org.getName());
+
+    return ResponseEntity.ok(response);
 }
  
     @GetMapping
@@ -111,6 +151,5 @@ public User login(@RequestBody User user) {
     public boolean deleteUser(@PathVariable Long id){
         return userService.deleteUser(id);
     }
-
 
 }

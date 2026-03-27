@@ -1,5 +1,6 @@
 package com.capestone.grievance.Entity;
 
+import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +13,15 @@ public class User {
     private String username;
     private String password;
     private String role;
+
+    // ✅ MANY TO MANY (CORRECT)
+    @ManyToMany
+    @JoinTable(
+        name = "user_categories",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
 
     @ManyToOne
     @JoinColumn(name = "assignee_type_id")
@@ -30,7 +40,7 @@ public class User {
         this.assigneeType = assigneeType;
     }
 
-    // ===== GETTERS & SETTERS =====
+    // ===== GETTERS =====
 
     public Long getId() {
         return id;
@@ -52,6 +62,16 @@ public class User {
         return assigneeType;
     }
 
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    // ===== SETTERS =====
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -72,11 +92,11 @@ public class User {
         this.assigneeType = assigneeType;
     }
 
-    public Organization getOrganization() {
-        return organization;
-    }
-
     public void setOrganization(Organization organization) {
         this.organization = organization;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

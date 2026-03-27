@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class AssigneeType {
@@ -13,6 +14,9 @@ public class AssigneeType {
     private Long id;
 
     private String name;
+
+    @ManyToOne
+private Organization organization;
 
     public AssigneeType() {
     }

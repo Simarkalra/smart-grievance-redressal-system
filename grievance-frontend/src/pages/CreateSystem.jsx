@@ -1,102 +1,211 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 
-export default function CreateGrievance() {
-  const [categories, setCategories] = useState([]);
-  const [selected, setSelected] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [message, setMessage] = useState("");
+export default function CreateSystem() {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    API.get("/categories")
-      .then((res) => setCategories(res.data))
-      .catch((err) => {
-        console.error(err);
-        alert("Failed to load categories");
-      });
-  }, []);
+  const [orgName, setOrgName] = useState("");
+  const [createdData, setCreatedData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleCreate = async () => {
     try {
-      let payload;
+      setLoading(true);
 
-      if (selected === "Other") {
-        payload = {
-          customTitle: title,
-          description,
-        };
-      } else {
-        payload = {
-          category: { id: selected },
-          description,
-        };
+      if (!orgName.trim()) {
+        alert("Organization name required");
+        return;
       }
 
-      await API.post("/grievance/create", payload);
+      const res = await API.post("/user/create-organization", {
+        name: orgName
+      });
 
-      setMessage("Grievance submitted successfully!");
+      const orgId = res.data.orgId;
+      const adminUsername = res.data.adminUsername;
+      const adminPassword = res.data.adminPassword;
 
-      setSelected("");
-      setTitle("");
-      setDescription("");
+      setCreatedData({
+        orgId,
+        adminUsername,
+        adminPassword
+      });
 
     } catch (err) {
       console.error(err);
-      alert("Error submitting grievance");
+      alert("Failed to create organization");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const isValid =
-    selected === "Other"
-      ? title.trim() && description.trim()
-      : selected && description.trim();
-
   return (
-    <div className="container">
-      <div className="card">
-        <h2>Create Grievance</h2>
+    <div style={styles.container}>
 
-        <select
-          value={selected}
-          onChange={(e) => {
-            setSelected(e.target.value);
-            if (e.target.value !== "Other") {
-              setTitle("");
-            }
-            setDescription("");
-          }}
-        >
-          <option value="">Select Issue</option>
+      <div style={styles.card}>
+        <h2 style={styles.title}>Create New System</h2>
+        <p style={styles.subtitle}>
+          Setup your organization and generate admin credentials
+        </p>
 
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-          <option value="Other">Other</option>
-        </select>
-
-        <textarea
-          placeholder="Describe your issue"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+        <input
+          style={styles.input}
+          placeholder="Enter Organization Name"
+          value={orgName}
+          onChange={(e) => setOrgName(e.target.value)}
+          disabled={loading}
         />
 
-        {selected === "Other" && (
-          <input
-            placeholder="Enter Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+        <div style={styles.buttonGroup}>
+          <button
+            style={styles.primaryBtn}
+            onClick={handleCreate}
+            disabled={loading}
+          >
+            {loading ? "Creating..." : "Create Organization"}
+          </button>
+
+          <button
+            style={styles.secondaryBtn}
+            onClick={() => navigate("/")}
+          >
+            Back
+          </button>
+        </div>
+
+        {/* SUCCESS CARD */}
+        {createdData && (
+          <div style={styles.successCard}>
+            <h3 style={{ marginBottom: 10 }}>✅ Organization Created</h3>
+
+            <div style={styles.infoRow}>
+              <span>Org ID:</span>
+              <strong>{createdData.orgId}</strong>
+            </div>
+
+            <div style={styles.infoRow}>
+              <span>Username:</span>
+              <strong>{createdData.adminUsername}</strong>
+            </div>
+
+            <div style={styles.infoRow}>
+              <span>Password:</span>
+              <strong>{createdData.adminPassword}</strong>
+            </div>
+
+            <button
+              style={styles.loginBtn}
+              onClick={() => navigate("/login")}
+            >
+              Go to Login
+            </button>
+          </div>
         )}
 
-        <button disabled={!isValid} onClick={handleSubmit}>
-          Submit
-        </button>
-
-        {message && <p style={{ color: "green" }}>{message}</p>}
       </div>
+
     </div>
   );
 }
+
+const styles = {
+  container: {
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "linear-gradient(to right, #eef2f7, #f8fafc)",
+    padding: "20px"
+  },
+
+  card: {
+    width: "400px",
+    background: "#fff",
+    padding: "30px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+    border: "1px solid #e5e7eb",
+    textAlign: "center"
+  },
+
+  title: {
+    fontSize: "24px",
+    fontWeight: "600",
+    marginBottom: "8px",
+    color: "#1f2937"
+  },
+
+  subtitle: {
+    fontSize: "14px",
+    color: "#6b7280",
+    marginBottom: "25px"
+  },
+
+  input: {
+    width: "100%",
+    padding: "10px",
+    borderRadius: "8px",
+    border: "1px solid #d1d5db",
+    fontSize: "14px",
+    marginBottom: "20px",
+    outline: "none"
+  },
+
+  buttonGroup: {
+    display: "flex",
+    gap: "10px",
+    justifyContent: "center",
+    marginBottom: "20px"
+  },
+
+  primaryBtn: {
+    flex: 1,
+    padding: "12px",
+    background: "#2563eb",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "600",
+    cursor: "pointer"
+  },
+
+  secondaryBtn: {
+    flex: 1,
+    padding: "12px",
+    background: "#e5e7eb",
+    color: "#111827",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "600",
+    cursor: "pointer"
+  },
+
+  successCard: {
+    marginTop: "20px",
+    padding: "20px",
+    borderRadius: "10px",
+    background: "#f0fdf4",
+    border: "1px solid #bbf7d0",
+    textAlign: "left"
+  },
+
+  infoRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "8px",
+    fontSize: "14px"
+  },
+
+  loginBtn: {
+    marginTop: "15px",
+    width: "100%",
+    padding: "10px",
+    background: "#10b981",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "600",
+    cursor: "pointer"
+  }
+};

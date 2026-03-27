@@ -2,6 +2,7 @@ package com.capestone.grievance.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,6 +12,7 @@ import com.capestone.grievance.Entity.AssigneeType;
 import com.capestone.grievance.Entity.Category;
 import com.capestone.grievance.Entity.Grievance;
 import com.capestone.grievance.Entity.KeywordRule;
+import com.capestone.grievance.Entity.Organization;
 import com.capestone.grievance.Entity.User;
 import com.capestone.grievance.Repository.CategoryRepository;
 import com.capestone.grievance.Repository.GrievanceRepository;
@@ -33,37 +35,64 @@ public class GrievanceService {
     private CategoryRepository categoryRepository;
 
 
-    public List<Grievance> getByAssignee(Long assigneeId) {
-    return grievanceRepository.findByAssigneeId(assigneeId);
+public List<Grievance> getByAssignee(Long userId, Long orgId) {
+
+    return grievanceRepository.findAll()
+            .stream()
+            .filter(g ->
+                g.getAssignee() != null &&
+                g.getAssignee().getId().equals(userId) &&
+                g.getOrganization() != null &&
+                g.getOrganization().getId().equals(orgId)
+            )
+            .toList();
 }
-    // Assign priority based on keyword
-    private void assignPriority(Grievance grievance) {
+   
+private void assignPriority(Grievance grievance) {
+    try {
 
-    Category category = grievance.getCategory();
-    String description = grievance.getDescription().toLowerCase();
-
-    List<KeywordRule> rules = keywordRuleRepository.findByCategory(category);
-
-    boolean match = false;
-
-    for (KeywordRule rule : rules) {
-
-        if (description.contains(rule.getKeyword().toLowerCase())) {
-
-            grievance.setPriority(
-                    Grievance.Priority.valueOf(rule.getPriority())
-            );
-
-            match = true;
+        if (grievance.getDescription() == null) {
+            grievance.setPriority(Grievance.Priority.LOW);
             return;
         }
-    }
 
-    if (!match) {
-        grievance.setPriority(Grievance.Priority.MEDIUM);
+        String desc = grievance.getDescription().toLowerCase();
+
+        List<KeywordRule> rules = keywordRuleRepository.findAll();
+
+        for (KeywordRule rule : rules) {
+
+            if (desc.contains(rule.getKeyword().toLowerCase())) {
+
+                try {
+                    // 🔥 SAFE CONVERSION
+                    String clean = rule.getPriority().trim().toUpperCase();
+
+                    grievance.setPriority(
+                        Grievance.Priority.valueOf(clean)
+                    );
+
+                } catch (Exception e) {
+                    System.out.println("Invalid priority in DB: " + rule.getPriority());
+                    grievance.setPriority(Grievance.Priority.LOW);
+                }
+
+                return;
+            }
+        }
+
+        grievance.setPriority(Grievance.Priority.LOW);
+
+    } catch (Exception e) {
+        System.out.println("Priority error: " + e.getMessage());
+        grievance.setPriority(Grievance.Priority.LOW);
     }
 }
 
+
+public List<Grievance> getByReportedUser(Long id) {
+    return grievanceRepository.findByReportedById(id);
+} 
     // Set SLA resolution deadline
     private void setResolutionDeadline(Grievance grievance) {
 
@@ -124,56 +153,49 @@ public class GrievanceService {
         }
     }
 
-    // Register new grievance
-    public Grievance registerGrievance(Grievance grievance) {
+public Grievance registerGrievance(Grievance grievance, Long userId) {
 
-    // Validate category
-   if (grievance.getCategory() == null && 
-    (grievance.getCustomTitle() == null || ((String) grievance.getCustomTitle()).isEmpty())) {
-    throw new IllegalArgumentException("Either category or custom title is required");
-}
+    try {
+        // ✅ 1. Get reporter
+    
 
-    Category category = grievance.getCategory();
-    Long categoryId = category.getId();
+       
 
-    if (category.getAssigneeType() == null && categoryId != null) {
-        category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found for id=" + categoryId));
+        Category category = categoryRepository.findById(grievance.getCategory().getId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
         grievance.setCategory(category);
-    }
 
-    if (category.getAssigneeType() == null) {
-        throw new IllegalArgumentException("AssigneeType not set for category");
-    }
+       User reporter = userRepository.findById(userId)
+    .orElseThrow(() -> new RuntimeException("User not found"));
 
-    grievance.setCreatedAt(LocalDateTime.now());
+grievance.setUser(reporter);
+grievance.setOrganization(reporter.getOrganization());
 
-    // Assign priority
-    assignPriority(grievance);
+// 3. Find staff
+List<User> users = userRepository
+    .findByCategoriesContainingAndOrganizationId(
+        category,
+        reporter.getOrganization().getId()
+    );
 
-    // Set SLA deadline
-    setResolutionDeadline(grievance);
+System.out.println("Users found: " + users.size());
 
-    grievance.setStatus(Grievance.Status.PENDING);
-
-
-    AssigneeType assigneeType = category.getAssigneeType();
-
-    if (assigneeType == null) {
-        throw new IllegalArgumentException("AssigneeType not set for category");
-    }
-
-    User assignee = userRepository.findFirstByAssigneeType(assigneeType);
-
-    if (assignee == null) {
-        throw new IllegalArgumentException("No user found for this assignee type");
-    }
-
-    grievance.setAssignee(assignee);
-
-    return grievanceRepository.save(grievance);
+// 4. ASSIGN STAFF (VERY IMPORTANT)
+if (!users.isEmpty()) {
+    grievance.setAssignee(users.get(0));  // ✅ THIS LINE FIXES YOUR ISSUE
+} else {
+    System.out.println("No staff found for this category");
 }
 
+// 5. Save
+return grievanceRepository.save(grievance);
+
+    } catch (Exception e) {
+        e.printStackTrace(); // 🔥 THIS WILL SHOW REAL ERROR
+        throw e;
+    }
+}
     // Get all grievances
     public List<Grievance> getAllGrievances() {
         return grievanceRepository.findAll();
@@ -213,5 +235,6 @@ public class GrievanceService {
     // Delete grievance
     public void deleteGrievance(Long grievanceId) {
         grievanceRepository.deleteById(grievanceId);
+
     }
 }

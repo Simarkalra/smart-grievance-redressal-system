@@ -2,13 +2,14 @@ package com.capestone.grievance.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 public class Organization {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     private String name; // College name / Company name
@@ -21,7 +22,7 @@ public void setName(String name) {
     this.name = name;
 }
 
-public Object getId() {
+public Long getId() {
     return id;
 }
 

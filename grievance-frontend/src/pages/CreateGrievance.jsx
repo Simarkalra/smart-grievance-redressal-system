@@ -4,94 +4,102 @@ import API from "../api/api";
 import Modal from "../components/Modal";
 
 export default function CreateGrievance() {
-
   const navigate = useNavigate();
+
   const [data, setData] = useState({
     title: "",
     description: ""
   });
 
-  const defaultCategories = [
-    { id: "wifi", name: "WiFi Issue" },
-    { id: "electricity", name: "Electricity Issue" },
-    { id: "security", name: "Security Issue" }
-  ];
-
-  const [categories, setCategories] = useState(defaultCategories);
+  // ✅ FIXED: No default categories
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [modal, setModal] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info"
+  });
+
+  // ✅ LOAD CATEGORIES (FIXED)
   useEffect(() => {
-    API.get("/admin/categories")
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    console.log("User:", user);
+
+    if (!user || !user.organizationId) {
+      console.warn("No organization found for user");
+      return;
+    }
+
+    API.get(`/admin/categories?orgId=${user.organizationId}`)
       .then((res) => {
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setCategories(res.data);
-        } else {
-          setCategories(defaultCategories);
-        }
+        console.log("Categories:", res.data);
+        setCategories(res.data || []);
       })
       .catch((err) => {
-        console.warn("Category API failed, using default categories", err);
-        setCategories(defaultCategories);
+        console.error("Failed to load categories", err);
+        setCategories([]);
       });
   }, []);
 
+  // ✅ SUBMIT GRIEVANCE
   const submit = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
 
-      const payload = {
-        description: data.description,
-        user: { id: user.id }
-      };
-
-      if (selectedCategory === "other") {
-        payload.title = data.title;
-      } else {
-        payload.category = { id: selectedCategory };
+      if (!user) {
+        alert("User not logged in");
+        return;
       }
 
-      await API.post("/grievance/create", payload);
+      if (!selectedCategory) {
+        alert("Please select category");
+        return;
+      }
+
+      if (!data.description.trim()) {
+        alert("Description required");
+        return;
+      }
+
+      const payload = {
+        description: data.description,
+        category: { id: parseInt(selectedCategory) }
+      };
+
+      await API.post(`/grievances?userId=${user.id}`, payload);
 
       setModal({
         isOpen: true,
-        title: "Success!",
-        message: "Grievance submitted successfully!",
+        title: "Success",
+        message: "Grievance submitted successfully",
         type: "success"
       });
 
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 2000);
+      setTimeout(() => navigate("/dashboard"), 1500);
 
     } catch (err) {
       console.error("Submission error", err);
+
       setModal({
         isOpen: true,
         title: "Error",
-        message: "Error submitting grievance. Please try again.",
+        message: "Failed to submit grievance",
         type: "error"
       });
     }
   };
 
-  const isOther = selectedCategory === "other";
-  const isSubmitDisabled =
-    (!isOther && (!selectedCategory || !data.description.trim())) ||
-    (isOther && (!data.title.trim() || !data.description.trim()));
-
   return (
     <div style={{ padding: 20 }}>
       <h2>Create Grievance</h2>
 
+      {/* CATEGORY */}
       <select
         value={selectedCategory}
-        onChange={(e) => {
-          setSelectedCategory(e.target.value);
-          if (e.target.value !== "other") {
-            setData((prev) => ({ ...prev, title: "" }));
-          }
-        }}
+        onChange={(e) => setSelectedCategory(e.target.value)}
       >
         <option value="">Select Category</option>
 
@@ -100,41 +108,34 @@ export default function CreateGrievance() {
             {c.name}
           </option>
         ))}
-
-        <option value="other">Other</option>
       </select>
 
-      <br />
-      <br />
+      <br /><br />
 
-      {isOther && (
-        <>
-          <input
-            placeholder="Title"
-            value={data.title}
-            onChange={(e) => setData({ ...data, title: e.target.value })}
-          />
-          <br />
-          <br />
-        </>
-      )}
-
+      {/* DESCRIPTION */}
       <textarea
         placeholder="Description"
         value={data.description}
-        onChange={(e) => setData({ ...data, description: e.target.value })}
+        onChange={(e) =>
+          setData({ ...data, description: e.target.value })
+        }
       />
 
-      <br />
-      <br />
+      <br /><br />
 
-      <button onClick={submit} disabled={isSubmitDisabled}>
+      {/* BUTTONS */}
+      <button onClick={submit}>
         Submit
       </button>
-      <button onClick={() => navigate("/dashboard")} style={{ marginLeft: 10 }}>
+
+      <button
+        onClick={() => navigate("/dashboard")}
+        style={{ marginLeft: 10 }}
+      >
         Cancel
       </button>
 
+      {/* MODAL */}
       <Modal
         isOpen={modal.isOpen}
         title={modal.title}
@@ -142,9 +143,7 @@ export default function CreateGrievance() {
         type={modal.type}
         onClose={() => {
           setModal({ ...modal, isOpen: false });
-          if (modal.type === "success") {
-            navigate("/dashboard");
-          }
+          if (modal.type === "success") navigate("/dashboard");
         }}
       />
     </div>

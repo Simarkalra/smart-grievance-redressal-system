@@ -5,9 +5,16 @@ import Modal from "../components/Modal";
 
 function ChangePassword() {
   const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [modal, setModal] = useState({ isOpen: false, title: "", message: "", type: "info" });
+
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info"
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,6 +38,7 @@ function ChangePassword() {
 
     } catch (err) {
       console.log(err);
+
       setModal({
         isOpen: true,
         title: "Error",
@@ -41,35 +49,48 @@ function ChangePassword() {
   };
 
   return (
-    <div>
-      <h2>Change Password</h2>
+    <div style={styles.container}>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
+      <div style={styles.card}>
+        <h2 style={styles.title}>Change Password</h2>
+        <p style={styles.subtitle}>
+          Update your account credentials securely
+        </p>
 
-        <br /><br />
+        <form onSubmit={handleSubmit}>
 
-        <input
-          type="password"
-          placeholder="New Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <input
+            style={styles.input}
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
 
-        <br /><br />
+          <input
+            style={styles.input}
+            type="password"
+            placeholder="New Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-        <button type="submit">Update Password</button>
-        <button type="button" onClick={() => navigate("/dashboard")} style={{ marginLeft: 10 }}>
-          Cancel
-        </button>
-      </form>
+          <button type="submit" style={styles.primaryBtn}>
+            Update Password
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate("/dashboard")}
+            style={styles.secondaryBtn}
+          >
+            Cancel
+          </button>
+
+        </form>
+      </div>
 
       <Modal
         isOpen={modal.isOpen}
@@ -88,3 +109,67 @@ function ChangePassword() {
 }
 
 export default ChangePassword;
+
+const styles = {
+  container: {
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "linear-gradient(to right, #eef2f7, #f8fafc)",
+    padding: "20px"
+  },
+
+  card: {
+    width: "360px",
+    background: "#fff",
+    padding: "30px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+    border: "1px solid #e5e7eb",
+    textAlign: "center"
+  },
+
+  title: {
+    fontSize: "22px",
+    fontWeight: "600",
+    marginBottom: "6px"
+  },
+
+  subtitle: {
+    fontSize: "14px",
+    color: "#6b7280",
+    marginBottom: "20px"
+  },
+
+  input: {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "15px",
+    borderRadius: "8px",
+    border: "1px solid #d1d5db",
+    fontSize: "14px"
+  },
+
+  primaryBtn: {
+    width: "100%",
+    padding: "12px",
+    background: "#2563eb",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "600",
+    cursor: "pointer",
+    marginBottom: "10px"
+  },
+
+  secondaryBtn: {
+    width: "100%",
+    padding: "10px",
+    background: "#e5e7eb",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "600",
+    cursor: "pointer"
+  }
+};

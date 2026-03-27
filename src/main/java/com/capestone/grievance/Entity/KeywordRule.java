@@ -12,6 +12,9 @@ public class KeywordRule {
     private String keyword;
 
     private String priority;
+    
+    @ManyToOne
+private Organization organization;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -55,5 +58,9 @@ public class KeywordRule {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public void setOrganization(Organization org) {
+       this.organization=org;
     }
 }
