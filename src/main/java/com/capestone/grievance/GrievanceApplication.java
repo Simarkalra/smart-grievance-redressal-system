@@ -16,18 +16,6 @@ public class GrievanceApplication {
 		SpringApplication.run(GrievanceApplication.class, args);
 	}
 
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-				.allowedOriginPatterns("*")
-					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-					.allowedHeaders("*")
-					.allowCredentials(true);
-			}
-		};
-	}
+	
 
 }
