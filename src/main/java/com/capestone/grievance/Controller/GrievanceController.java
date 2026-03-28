@@ -11,7 +11,6 @@ import com.capestone.grievance.Entity.Grievance;
 import com.capestone.grievance.Service.GrievanceService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/grievances")
 @CrossOrigin(origins = "*")
 public class GrievanceController {
