@@ -12,7 +12,7 @@ import com.capestone.grievance.Service.GrievanceService;
 
 @RestController
 @RequestMapping("/grievances")
-@CrossOrigin(origins = "*")
+
 public class GrievanceController {
 
     @Autowired

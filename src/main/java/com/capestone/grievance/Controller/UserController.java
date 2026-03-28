@@ -20,7 +20,7 @@ import com.capestone.grievance.Service.UserService;
 
 
 @RestController
-@CrossOrigin(origins = "*")
+
 @RequestMapping("/user")
 public class UserController {
 
