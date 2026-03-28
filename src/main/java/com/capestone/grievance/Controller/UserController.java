@@ -41,8 +41,6 @@ private AssigneeTypeRepository assigneeTypeRepository;
 
 
 
-
-
 @PostMapping("/create-organization")
 public ResponseEntity<?> createOrganization(@RequestBody Map<String, String> request) {
 
