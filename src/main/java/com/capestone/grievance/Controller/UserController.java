@@ -20,7 +20,7 @@ import com.capestone.grievance.Service.UserService;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/user")
 public class UserController {
 

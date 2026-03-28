@@ -15,7 +15,7 @@ import com.capestone.grievance.Repository.OrganizationRepository;
 
 @RestController
 @RequestMapping("/admin/categories")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class CategoryController {
 
     @Autowired
