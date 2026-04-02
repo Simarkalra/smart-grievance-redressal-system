@@ -38,6 +38,19 @@ export default function AdminAllStaffPage() {
         </button>
       </div>
 
+      {/* ✅ NEW: INSTRUCTION BOX */}
+      <div style={styles.helperBox}>
+        <p>
+          This page shows all staff members in your organization.
+          <br />
+          • View assigned categories for each staff  
+          <br />
+          • Click on a staff card to see detailed grievance activity  
+          <br />
+          • Helps monitor workload and performance  
+        </p>
+      </div>
+
       {/* GRID */}
       <div style={styles.grid}>
         {staffs.length === 0 ? (
@@ -51,7 +64,7 @@ export default function AdminAllStaffPage() {
             >
               <h3 style={styles.name}>{staff.username}</h3>
 
-              <p style={styles.label}>Categories</p>
+              <p style={styles.label}>Assigned Categories</p>
               <p style={styles.categories}>
                 {staff.categories?.length
                   ? staff.categories.map(c => c.name).join(", ")
@@ -59,7 +72,7 @@ export default function AdminAllStaffPage() {
               </p>
 
               <div style={styles.footer}>
-                <span style={styles.viewText}>View Details →</span>
+                <span style={styles.viewText}>Click to view details →</span>
               </div>
             </div>
           ))
@@ -81,7 +94,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "25px"
+    marginBottom: "20px"
   },
 
   subText: {
@@ -97,6 +110,18 @@ const styles = {
     borderRadius: "8px",
     cursor: "pointer",
     fontWeight: "600"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "15px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    color: "#374151",
+    marginBottom: "25px",
+    lineHeight: "1.6"
   },
 
   grid: {

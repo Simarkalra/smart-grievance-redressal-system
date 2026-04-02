@@ -73,9 +73,27 @@ export default function CategoryPage() {
         </button>
       </div>
 
+      {/* ✅ NEW: INSTRUCTION BOX */}
+      <div style={styles.helperBox}>
+        <p>
+          Categories help organize grievances submitted by users.
+          <br />
+          • Each complaint must belong to a category  
+          <br />
+          • Categories will be visible to users when raising a grievance  
+          <br />
+          • Example: <i>Network Issue, Hostel Problem, Fee Issue</i>
+        </p>
+      </div>
+
       {/* CREATE CARD */}
       <div style={styles.card}>
         <h3 style={styles.cardTitle}>Create Category</h3>
+
+        {/* ✅ SMALL HELP TEXT */}
+        <p style={styles.smallText}>
+          Enter a unique category name (e.g., "technical issue")
+        </p>
 
         <div style={styles.row}>
           <input
@@ -112,6 +130,11 @@ export default function CategoryPage() {
             Clear
           </button>
         </div>
+
+        {/* ✅ SMALL HELP TEXT */}
+        <p style={styles.smallText}>
+          Showing all categories for your organization
+        </p>
 
         {/* LIST */}
         <div style={styles.list}>
@@ -154,7 +177,20 @@ const styles = {
     padding: "8px 12px",
     background: "#e5e7eb",
     border: "none",
-    borderRadius: "6px"
+    borderRadius: "6px",
+    cursor: "pointer"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "15px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    color: "#374151",
+    marginBottom: "20px",
+    lineHeight: "1.6"
   },
 
   card: {
@@ -166,9 +202,16 @@ const styles = {
   },
 
   cardTitle: {
-    marginBottom: "15px",
+    marginBottom: "10px",
     fontSize: "18px",
     fontWeight: "600"
+  },
+
+  /* ✅ NEW */
+  smallText: {
+    fontSize: "12px",
+    color: "#6b7280",
+    marginBottom: "10px"
   },
 
   row: {
@@ -188,13 +231,14 @@ const styles = {
     color: "#fff",
     border: "none",
     padding: "8px 14px",
-    borderRadius: "6px"
+    borderRadius: "6px",
+    cursor: "pointer"
   },
 
   searchRow: {
     display: "flex",
     gap: "10px",
-    marginBottom: "15px"
+    marginBottom: "10px"
   },
 
   clearBtn: {
@@ -202,7 +246,8 @@ const styles = {
     color: "#fff",
     border: "none",
     padding: "8px 12px",
-    borderRadius: "6px"
+    borderRadius: "6px",
+    cursor: "pointer"
   },
 
   list: {

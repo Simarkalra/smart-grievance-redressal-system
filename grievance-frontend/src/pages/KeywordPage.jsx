@@ -77,13 +77,31 @@ export default function KeywordPage() {
         </button>
       </div>
 
+      {/* ✅ NEW: INSTRUCTION BOX */}
+      <div style={styles.helperBox}>
+        <p>
+          Keywords help automatically assign priority to grievances.
+          <br />
+          • If a complaint contains a keyword, its priority is set automatically  
+          <br />
+          • Example: <i>"urgent", "failure", "not working"</i>  
+          <br />
+          • Higher priority → Faster response and handling  
+        </p>
+      </div>
+
       {/* CREATE CARD */}
       <div style={styles.card}>
         <h3 style={styles.cardTitle}>Create Rule</h3>
 
+        {/* ✅ SMALL HELP TEXT */}
+        <p style={styles.smallText}>
+          Add keywords that define how urgent a complaint is
+        </p>
+
         <div style={styles.row}>
           <input
-            placeholder="Keyword"
+            placeholder="Keyword (e.g. urgent)"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             style={styles.input}
@@ -124,41 +142,46 @@ export default function KeywordPage() {
           </button>
         </div>
 
-        {/* TABLE */}
-<table style={styles.table}>
-  <thead>
-    <tr>
-      <th style={styles.th}>Keyword</th>
-      <th style={styles.th}>Priority</th>
-    </tr>
-  </thead>
+        {/* ✅ SMALL HELP TEXT */}
+        <p style={styles.smallText}>
+          Showing all keyword-based priority rules
+        </p>
 
-  <tbody>
-    {filtered.length > 0 ? (
-      filtered.map((r) => (
-        <tr key={r.id}>
-          <td style={styles.td}>{r.keyword}</td>
-          <td style={styles.td}>
-            <span
-              style={{
-                ...styles.badge,
-                background: getPriorityColor(r.priority)
-              }}
-            >
-              {r.priority}
-            </span>
-          </td>
-        </tr>
-      ))
-    ) : (
-      <tr>
-        <td colSpan="2" style={{ textAlign: "center", padding: 15 }}>
-          No results found
-        </td>
-      </tr>
-    )}
-  </tbody>
-</table>
+        {/* TABLE */}
+        <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={styles.th}>Keyword</th>
+              <th style={styles.th}>Priority</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {filtered.length > 0 ? (
+              filtered.map((r) => (
+                <tr key={r.id}>
+                  <td style={styles.td}>{r.keyword}</td>
+                  <td style={styles.td}>
+                    <span
+                      style={{
+                        ...styles.badge,
+                        background: getPriorityColor(r.priority)
+                      }}
+                    >
+                      {r.priority}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="2" style={{ textAlign: "center", padding: 15 }}>
+                  No results found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
 
       </div>
 
@@ -172,21 +195,6 @@ const styles = {
     padding: "30px",
     background: "linear-gradient(to right, #eef2f7, #f8fafc)"
   },
-  table: {
-  width: "100%",
-  borderCollapse: "collapse"
-},
-
-th: {
-  textAlign: "left",
-  padding: "12px",
-  borderBottom: "2px solid #e5e7eb"
-},
-
-td: {
-  padding: "12px",
-  borderBottom: "1px solid #e5e7eb"
-},
 
   header: {
     display: "flex",
@@ -204,7 +212,20 @@ td: {
     padding: "8px 12px",
     background: "#e5e7eb",
     border: "none",
-    borderRadius: "6px"
+    borderRadius: "6px",
+    cursor: "pointer"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "15px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    color: "#374151",
+    marginBottom: "20px",
+    lineHeight: "1.6"
   },
 
   card: {
@@ -216,9 +237,16 @@ td: {
   },
 
   cardTitle: {
-    marginBottom: "15px",
+    marginBottom: "10px",
     fontSize: "18px",
     fontWeight: "600"
+  },
+
+  /* ✅ NEW */
+  smallText: {
+    fontSize: "12px",
+    color: "#6b7280",
+    marginBottom: "10px"
   },
 
   row: {
@@ -238,13 +266,14 @@ td: {
     color: "#fff",
     border: "none",
     padding: "8px 14px",
-    borderRadius: "6px"
+    borderRadius: "6px",
+    cursor: "pointer"
   },
 
   searchRow: {
     display: "flex",
     gap: "10px",
-    marginBottom: "15px"
+    marginBottom: "10px"
   },
 
   clearBtn: {
@@ -252,12 +281,24 @@ td: {
     color: "#fff",
     border: "none",
     padding: "8px 12px",
-    borderRadius: "6px"
+    borderRadius: "6px",
+    cursor: "pointer"
   },
 
   table: {
     width: "100%",
     borderCollapse: "collapse"
+  },
+
+  th: {
+    textAlign: "left",
+    padding: "12px",
+    borderBottom: "2px solid #e5e7eb"
+  },
+
+  td: {
+    padding: "12px",
+    borderBottom: "1px solid #e5e7eb"
   },
 
   badge: {

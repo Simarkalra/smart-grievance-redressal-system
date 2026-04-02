@@ -1,3 +1,4 @@
+// (same imports)
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
@@ -15,7 +16,6 @@ export default function AssigneePage() {
   const user = JSON.parse(localStorage.getItem("user"));
   const orgId = user?.organizationId || user?.organization?.id;
 
-  // ✅ ASSIGN CATEGORY
   const assignCategory = async (userId, categoryId) => {
     try {
       await API.put("/admin/assign-category", {
@@ -28,7 +28,6 @@ export default function AssigneePage() {
     }
   };
 
-  // ✅ REMOVE CATEGORY (REAL API)
   const removeCategory = async (userId, categoryId) => {
     try {
       await API.delete(
@@ -40,7 +39,6 @@ export default function AssigneePage() {
     }
   };
 
-  // ✅ LOAD DATA
   const load = async () => {
     try {
       const catRes = await API.get(`/admin/categories?orgId=${orgId}`);
@@ -57,7 +55,6 @@ export default function AssigneePage() {
     if (orgId) load();
   }, [orgId]);
 
-  // ✅ CREATE STAFF
   const create = async () => {
     if (!username.trim() || !password.trim() || !categoryId) {
       alert("Fill all fields");
@@ -97,6 +94,19 @@ export default function AssigneePage() {
         </button>
       </div>
 
+      {/* ✅ NEW: INSTRUCTION BOX */}
+      <div style={styles.helperBox}>
+        <p>
+          Staff (assignees) are responsible for handling grievances.
+          <br />
+          • Create staff accounts and assign them to categories  
+          <br />
+          • Each staff handles complaints related to assigned categories  
+          <br />
+          • You can assign or remove categories anytime  
+        </p>
+      </div>
+
       {/* CREATE */}
       <div style={styles.createBox}>
         <input
@@ -129,6 +139,11 @@ export default function AssigneePage() {
         </button>
       </div>
 
+      {/* ✅ SMALL HELP TEXT */}
+      <p style={styles.smallText}>
+        Create a staff account and assign an initial category
+      </p>
+
       {/* SEARCH */}
       <input
         placeholder="Search staff..."
@@ -153,7 +168,6 @@ export default function AssigneePage() {
               <tr key={a.id}>
                 <td style={styles.td}>{a.username}</td>
 
-                {/* ASSIGNED */}
                 <td style={styles.td}>
                   {a.categories?.length ? (
                     a.categories.map(c => (
@@ -172,7 +186,6 @@ export default function AssigneePage() {
                   )}
                 </td>
 
-                {/* ASSIGN */}
                 <td style={styles.td}>
                   <select
                     onChange={(e) => assignCategory(a.id, e.target.value)}
@@ -218,10 +231,22 @@ const styles = {
     borderRadius: 6
   },
 
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "15px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    color: "#374151",
+    marginBottom: "20px",
+    lineHeight: "1.6"
+  },
+
   createBox: {
     display: "flex",
     gap: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     flexWrap: "wrap"
   },
 
@@ -237,6 +262,13 @@ const styles = {
     border: "none",
     padding: "8px 14px",
     borderRadius: 6
+  },
+
+  /* ✅ NEW */
+  smallText: {
+    fontSize: "12px",
+    color: "#6b7280",
+    marginBottom: "15px"
   },
 
   tableContainer: {

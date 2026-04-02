@@ -8,7 +8,7 @@ export default function Dashboard() {
 
       {/* HEADER */}
       <div style={styles.header}>
-        <h1>User Dashboard</h1>
+        <h1 style={styles.title}>User Dashboard</h1>
 
         <button
           style={styles.logout}
@@ -21,12 +21,23 @@ export default function Dashboard() {
         </button>
       </div>
 
+      {/* ✅ NEW: INSTRUCTION BOX */}
+      <div style={styles.helperBox}>
+        <p>
+          Welcome! From here you can manage your grievances:
+          <br />
+          • Create a new complaint using <strong>Create Grievance</strong>  
+          <br />
+          • Track status of your complaints in <strong>My Grievances</strong>  
+        </p>
+      </div>
+
       {/* ACTION CARDS */}
       <div style={styles.grid}>
 
         <div style={styles.card}>
           <h3>Create Grievance</h3>
-          <p>Submit a new complaint</p>
+          <p>Submit a new complaint to your organization</p>
           <button
             style={styles.primaryBtn}
             onClick={() => navigate("/create")}
@@ -37,7 +48,7 @@ export default function Dashboard() {
 
         <div style={styles.card}>
           <h3>My Grievances</h3>
-          <p>Track your submitted complaints</p>
+          <p>View status and updates of your complaints</p>
           <button
             style={styles.primaryBtn}
             onClick={() => navigate("/my")}
@@ -48,7 +59,7 @@ export default function Dashboard() {
 
         <div style={styles.card}>
           <h3>Back to Home</h3>
-          <p>Return to main page</p>
+          <p>Return to main landing page</p>
           <button
             style={styles.secondaryBtn}
             onClick={() => navigate("/")}
@@ -74,7 +85,23 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "30px"
+    marginBottom: "20px"
+  },
+
+  title: {
+    color: "#1f2937"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "15px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    color: "#374151",
+    marginBottom: "25px",
+    lineHeight: "1.6"
   },
 
   grid: {

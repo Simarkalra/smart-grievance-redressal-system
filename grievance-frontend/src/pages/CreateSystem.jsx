@@ -44,10 +44,21 @@ export default function CreateSystem() {
     <div style={styles.container}>
 
       <div style={styles.card}>
+
         <h2 style={styles.title}>Create New System</h2>
+
         <p style={styles.subtitle}>
           Setup your organization and generate admin credentials
         </p>
+
+        {/* ✅ NEW: Instruction Box */}
+        <div style={styles.helperBox}>
+          <p>
+            Enter your organization name to create a new system.
+            <br />
+            You will be assigned as the <strong>Admin</strong>.
+          </p>
+        </div>
 
         <input
           style={styles.input}
@@ -74,10 +85,15 @@ export default function CreateSystem() {
           </button>
         </div>
 
-        {/* SUCCESS CARD */}
+        {/* ✅ SUCCESS CARD */}
         {createdData && (
           <div style={styles.successCard}>
             <h3 style={{ marginBottom: 10 }}>✅ Organization Created</h3>
+
+            {/* 🔴 IMPORTANT NOTE */}
+            <p style={styles.warningText}>
+              ⚠️ Please save these credentials. They will not be shown again.
+            </p>
 
             <div style={styles.infoRow}>
               <span>Org ID:</span>
@@ -120,11 +136,11 @@ const styles = {
   },
 
   card: {
-    width: "400px",
+    width: "420px",
     background: "#fff",
     padding: "30px",
     borderRadius: "14px",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
     border: "1px solid #e5e7eb",
     textAlign: "center"
   },
@@ -139,12 +155,24 @@ const styles = {
   subtitle: {
     fontSize: "14px",
     color: "#6b7280",
-    marginBottom: "25px"
+    marginBottom: "15px"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "12px",
+    borderRadius: "8px",
+    fontSize: "14px",
+    color: "#374151",
+    marginBottom: "20px",
+    lineHeight: "1.5"
   },
 
   input: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     borderRadius: "8px",
     border: "1px solid #d1d5db",
     fontSize: "14px",
@@ -162,7 +190,7 @@ const styles = {
   primaryBtn: {
     flex: 1,
     padding: "12px",
-    background: "#2563eb",
+    background: "linear-gradient(to right, #2563eb, #3b82f6)",
     color: "#fff",
     border: "none",
     borderRadius: "8px",
@@ -188,6 +216,14 @@ const styles = {
     background: "#f0fdf4",
     border: "1px solid #bbf7d0",
     textAlign: "left"
+  },
+
+  /* ✅ NEW */
+  warningText: {
+    fontSize: "13px",
+    color: "#b91c1c",
+    marginBottom: "10px",
+    fontWeight: "500"
   },
 
   infoRow: {

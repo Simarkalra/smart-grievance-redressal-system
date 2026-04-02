@@ -33,9 +33,21 @@ export default function JoinSystem() {
 
       <div style={styles.card}>
         <h2 style={styles.title}>Join Existing System</h2>
+
         <p style={styles.subtitle}>
           Register as a user or staff using your organization ID
         </p>
+
+        {/* ✅ NEW: Instruction Box */}
+        <div style={styles.helperBox}>
+          <p>
+            Enter your details to join an existing organization.
+            <br />
+            <strong>User</strong> → Submit and track grievances  
+            <br />
+            <strong>Staff</strong> → Manage and resolve assigned grievances  
+          </p>
+        </div>
 
         <input
           style={styles.input}
@@ -56,6 +68,11 @@ export default function JoinSystem() {
           onChange={(e) => setData({ ...data, orgId: e.target.value })}
         />
 
+        {/* ✅ SMALL HINT */}
+        <p style={styles.hintText}>
+          ℹ️ Organization ID is provided by your admin
+        </p>
+
         <select
           style={styles.select}
           onChange={(e) => setData({ ...data, role: e.target.value })}
@@ -63,6 +80,11 @@ export default function JoinSystem() {
           <option value="USER">User</option>
           <option value="STAFF">Staff</option>
         </select>
+
+        {/* ✅ ROLE HINT */}
+        <p style={styles.hintText}>
+          Select your role carefully based on your access level
+        </p>
 
         <button style={styles.button} onClick={handleRegister}>
           Register
@@ -84,11 +106,11 @@ const styles = {
   },
 
   card: {
-    width: "350px",
+    width: "380px",
     background: "#fff",
     padding: "30px",
     borderRadius: "14px",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
     border: "1px solid #e5e7eb",
     textAlign: "center"
   },
@@ -103,23 +125,44 @@ const styles = {
   subtitle: {
     fontSize: "14px",
     color: "#6b7280",
-    marginBottom: "25px"
+    marginBottom: "15px"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "12px",
+    borderRadius: "8px",
+    fontSize: "13px",
+    color: "#374151",
+    marginBottom: "15px",
+    lineHeight: "1.5",
+    textAlign: "left"
   },
 
   input: {
     width: "100%",
     padding: "10px",
-    marginBottom: "15px",
+    marginBottom: "12px",
     borderRadius: "8px",
     border: "1px solid #d1d5db",
     fontSize: "14px",
     outline: "none"
   },
 
+  /* ✅ NEW */
+  hintText: {
+    fontSize: "12px",
+    color: "#6b7280",
+    marginBottom: "10px",
+    textAlign: "left"
+  },
+
   select: {
     width: "100%",
     padding: "10px",
-    marginBottom: "20px",
+    marginBottom: "10px",
     borderRadius: "8px",
     border: "1px solid #d1d5db",
     fontSize: "14px",
@@ -129,7 +172,7 @@ const styles = {
   button: {
     width: "100%",
     padding: "12px",
-    background: "#10b981",
+    background: "linear-gradient(to right, #10b981, #34d399)",
     color: "#fff",
     border: "none",
     borderRadius: "8px",

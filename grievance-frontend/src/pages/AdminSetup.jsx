@@ -8,15 +8,33 @@ export default function AdminSetup() {
 
       <div style={styles.card}>
         <h2 style={styles.title}>System Setup</h2>
+
         <p style={styles.subtitle}>
           Complete the initial setup of your grievance system
         </p>
 
+        {/* ✅ NEW: INSTRUCTION BOX */}
+        <div style={styles.helperBox}>
+          <p>
+            Follow these steps to configure your system before users start submitting grievances:
+            <br />
+            1️⃣ Create categories → Define complaint types  
+            <br />
+            2️⃣ Assign staff → Handle complaints  
+            <br />
+            3️⃣ Set keywords → Automatically assign priority  
+          </p>
+        </div>
+
         <div style={styles.steps}>
 
+          {/* STEP 1 */}
           <div style={styles.stepCard}>
-            <h3>Create Categories</h3>
-            <p>Define complaint categories for your organization</p>
+            <div>
+              <h3>1. Create Categories</h3>
+              <p>Define complaint categories for your organization</p>
+            </div>
+
             <button
               style={styles.primaryBtn}
               onClick={() => navigate("/admin/categories")}
@@ -25,9 +43,13 @@ export default function AdminSetup() {
             </button>
           </div>
 
+          {/* STEP 2 */}
           <div style={styles.stepCard}>
-            <h3>Assign Assignees</h3>
-            <p>Add staff and assign them to categories</p>
+            <div>
+              <h3>2. Assign Assignees</h3>
+              <p>Add staff and assign them to categories</p>
+            </div>
+
             <button
               style={styles.primaryBtn}
               onClick={() => navigate("/admin/assignees")}
@@ -36,9 +58,13 @@ export default function AdminSetup() {
             </button>
           </div>
 
+          {/* STEP 3 */}
           <div style={styles.stepCard}>
-            <h3>Keyword Rules</h3>
-            <p>Set priority rules based on keywords</p>
+            <div>
+              <h3>3. Keyword Rules</h3>
+              <p>Set priority rules based on keywords</p>
+            </div>
+
             <button
               style={styles.primaryBtn}
               onClick={() => navigate("/admin/keywords")}
@@ -48,6 +74,11 @@ export default function AdminSetup() {
           </div>
 
         </div>
+
+        {/* ✅ SMALL NOTE */}
+        <p style={styles.smallText}>
+          You can complete these steps in any order, but all are recommended for best system performance.
+        </p>
 
         {/* FINISH BUTTON */}
         <button
@@ -93,14 +124,27 @@ const styles = {
   subtitle: {
     fontSize: "14px",
     color: "#6b7280",
-    marginBottom: "25px"
+    marginBottom: "15px"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "15px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    color: "#374151",
+    marginBottom: "20px",
+    lineHeight: "1.6",
+    textAlign: "left"
   },
 
   steps: {
     display: "flex",
     flexDirection: "column",
     gap: "15px",
-    marginBottom: "25px"
+    marginBottom: "15px"
   },
 
   stepCard: {
@@ -122,6 +166,13 @@ const styles = {
     borderRadius: "6px",
     fontWeight: "600",
     cursor: "pointer"
+  },
+
+  /* ✅ NEW */
+  smallText: {
+    fontSize: "12px",
+    color: "#6b7280",
+    marginBottom: "15px"
   },
 
   finishBtn: {

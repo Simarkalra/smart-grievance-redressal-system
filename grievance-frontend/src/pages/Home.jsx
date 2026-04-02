@@ -6,9 +6,20 @@ export default function Home() {
   return (
     <div style={styles.container}>
       <div style={styles.wrapper}>
-        <h1 style={styles.title}>Grievance Management System</h1>
+        
+        <h1 style={styles.title}>Smart Grievance Management System</h1>
+
         <p style={styles.subtitle}>
           Manage complaints efficiently with a structured system
+        </p>
+
+        {/* ✅ NEW: Instruction Banner */}
+        <p style={styles.helperText}>
+          Welcome! Choose how you want to get started:
+          <br />
+          <strong>Admin</strong> → Create a new system |{" "}
+          <strong>User</strong> → Join an existing system |{" "}
+          <strong>Existing User</strong> → Login
         </p>
 
         <div style={styles.grid}>
@@ -17,7 +28,7 @@ export default function Home() {
           <div style={styles.card}>
             <h2 style={styles.cardTitle}>Create System</h2>
             <p style={styles.cardText}>
-              Setup a new grievance system as an admin
+              Create and manage a new grievance system as an admin
             </p>
             <button
               style={styles.primaryBtn}
@@ -31,7 +42,7 @@ export default function Home() {
           <div style={styles.card}>
             <h2 style={styles.cardTitle}>Join System</h2>
             <p style={styles.cardText}>
-              Register as a user or staff in an existing system
+              Join an existing organization using details provided by admin
             </p>
             <button
               style={styles.secondaryBtn}
@@ -45,7 +56,7 @@ export default function Home() {
           <div style={styles.card}>
             <h2 style={styles.cardTitle}>Login</h2>
             <p style={styles.cardText}>
-              Access your dashboard and manage grievances
+              Login to access your dashboard and track grievances
             </p>
             <button
               style={styles.primaryBtn}
@@ -87,7 +98,19 @@ const styles = {
   subtitle: {
     fontSize: "16px",
     color: "#6b7280",
-    marginBottom: "40px"
+    marginBottom: "20px"
+  },
+
+  /* ✅ NEW STYLE */
+  helperText: {
+    fontSize: "15px",
+    color: "#374151",
+    background: "#f1f5f9",
+    padding: "12px 16px",
+    borderRadius: "8px",
+    marginBottom: "40px",
+    lineHeight: "1.6",
+    border: "1px solid #e2e8f0"
   },
 
   grid: {

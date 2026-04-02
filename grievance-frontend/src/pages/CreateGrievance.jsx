@@ -11,7 +11,6 @@ export default function CreateGrievance() {
     description: ""
   });
 
-  // ✅ FIXED: No default categories
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -22,11 +21,8 @@ export default function CreateGrievance() {
     type: "info"
   });
 
-  // ✅ LOAD CATEGORIES (FIXED)
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-
-    console.log("User:", user);
 
     if (!user || !user.organizationId) {
       console.warn("No organization found for user");
@@ -35,7 +31,6 @@ export default function CreateGrievance() {
 
     API.get(`/admin/categories?orgId=${user.organizationId}`)
       .then((res) => {
-        console.log("Categories:", res.data);
         setCategories(res.data || []);
       })
       .catch((err) => {
@@ -44,7 +39,6 @@ export default function CreateGrievance() {
       });
   }, []);
 
-  // ✅ SUBMIT GRIEVANCE
   const submit = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -93,13 +87,26 @@ export default function CreateGrievance() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Create Grievance</h2>
+    <div style={styles.container}>
+      <h2 style={styles.title}>Create Grievance</h2>
+
+      {/* ✅ NEW: INSTRUCTION BOX */}
+      <div style={styles.helperBox}>
+        <p>
+          Submit your complaint by selecting a category and describing your issue clearly.
+          <br />
+          • Choose the most relevant category  
+          <br />
+          • Provide detailed description for faster resolution  
+        </p>
+      </div>
 
       {/* CATEGORY */}
+      <label style={styles.label}>Select Category</label>
       <select
         value={selectedCategory}
         onChange={(e) => setSelectedCategory(e.target.value)}
+        style={styles.input}
       >
         <option value="">Select Category</option>
 
@@ -110,30 +117,40 @@ export default function CreateGrievance() {
         ))}
       </select>
 
-      <br /><br />
+      {/* ✅ SMALL HELP */}
+      <p style={styles.smallText}>
+        Categories are defined by your organization admin
+      </p>
 
       {/* DESCRIPTION */}
+      <label style={styles.label}>Description</label>
       <textarea
-        placeholder="Description"
+        placeholder="Describe your issue in detail..."
         value={data.description}
         onChange={(e) =>
           setData({ ...data, description: e.target.value })
         }
+        style={styles.textarea}
       />
 
-      <br /><br />
+      {/* ✅ SMALL HELP */}
+      <p style={styles.smallText}>
+        Include important details like location, time, and issue severity
+      </p>
 
       {/* BUTTONS */}
-      <button onClick={submit}>
-        Submit
-      </button>
+      <div style={styles.buttonRow}>
+        <button onClick={submit} style={styles.primaryBtn}>
+          Submit
+        </button>
 
-      <button
-        onClick={() => navigate("/dashboard")}
-        style={{ marginLeft: 10 }}
-      >
-        Cancel
-      </button>
+        <button
+          onClick={() => navigate("/dashboard")}
+          style={styles.secondaryBtn}
+        >
+          Cancel
+        </button>
+      </div>
 
       {/* MODAL */}
       <Modal
@@ -149,3 +166,80 @@ export default function CreateGrievance() {
     </div>
   );
 }
+
+const styles = {
+  container: {
+    minHeight: "100vh",
+    padding: "30px",
+    background: "linear-gradient(to right, #eef2f7, #f8fafc)"
+  },
+
+  title: {
+    marginBottom: "20px",
+    color: "#1f2937"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "15px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    color: "#374151",
+    marginBottom: "20px",
+    lineHeight: "1.6"
+  },
+
+  label: {
+    display: "block",
+    marginBottom: "5px",
+    fontWeight: "500"
+  },
+
+  input: {
+    width: "100%",
+    padding: "10px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    marginBottom: "5px"
+  },
+
+  textarea: {
+    width: "100%",
+    minHeight: "120px",
+    padding: "10px",
+    borderRadius: "6px",
+    border: "1px solid #ccc"
+  },
+
+  /* ✅ NEW */
+  smallText: {
+    fontSize: "12px",
+    color: "#6b7280",
+    marginBottom: "15px"
+  },
+
+  buttonRow: {
+    marginTop: "15px",
+    display: "flex",
+    gap: "10px"
+  },
+
+  primaryBtn: {
+    background: "#2563eb",
+    color: "#fff",
+    border: "none",
+    padding: "10px 16px",
+    borderRadius: "6px",
+    cursor: "pointer"
+  },
+
+  secondaryBtn: {
+    background: "#e5e7eb",
+    border: "none",
+    padding: "10px 16px",
+    borderRadius: "6px",
+    cursor: "pointer"
+  }
+};

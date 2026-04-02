@@ -41,9 +41,23 @@ export default function Login() {
     <div style={styles.container}>
       <div style={styles.card}>
         <h2 style={styles.title}>Login</h2>
+
         <p style={styles.subtitle}>
           Access your organization dashboard
         </p>
+
+        {/* ✅ NEW: Instruction Box */}
+        <div style={styles.helperBox}>
+          <p>
+            Login using the credentials provided during registration.
+            <br />
+            <strong>Admin</strong> → Manage system, assign staff  
+            <br />
+            <strong>Staff</strong> → Handle assigned grievances  
+            <br />
+            <strong>User</strong> → Submit and track complaints
+          </p>
+        </div>
 
         <input
           style={styles.input}
@@ -73,6 +87,11 @@ export default function Login() {
           }
         />
 
+        {/* ✅ SMALL HINT */}
+        <p style={styles.hintText}>
+          ℹ️ Organization ID was provided during system creation or registration
+        </p>
+
         <button style={styles.button} onClick={handleLogin}>
           Login
         </button>
@@ -99,11 +118,11 @@ const styles = {
   },
 
   card: {
-    width: "350px",
+    width: "370px",
     background: "#fff",
     padding: "30px",
     borderRadius: "14px",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
     border: "1px solid #e5e7eb",
     textAlign: "center"
   },
@@ -118,23 +137,44 @@ const styles = {
   subtitle: {
     fontSize: "14px",
     color: "#6b7280",
-    marginBottom: "25px"
+    marginBottom: "15px"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "12px",
+    borderRadius: "8px",
+    fontSize: "13px",
+    color: "#374151",
+    marginBottom: "15px",
+    lineHeight: "1.5",
+    textAlign: "left"
   },
 
   input: {
     width: "100%",
     padding: "10px",
-    marginBottom: "15px",
+    marginBottom: "12px",
     borderRadius: "8px",
     border: "1px solid #d1d5db",
     fontSize: "14px",
     outline: "none"
   },
 
+  /* ✅ NEW */
+  hintText: {
+    fontSize: "12px",
+    color: "#6b7280",
+    marginBottom: "12px",
+    textAlign: "left"
+  },
+
   button: {
     width: "100%",
     padding: "12px",
-    background: "#2563eb",
+    background: "linear-gradient(to right, #2563eb, #3b82f6)",
     color: "#fff",
     border: "none",
     borderRadius: "8px",

@@ -54,6 +54,19 @@ export default function AdminStaffGrievances() {
         </button>
       </div>
 
+      {/* ✅ NEW: INSTRUCTION BOX */}
+      <div style={styles.helperBox}>
+        <p>
+          This page shows all grievances assigned to a specific staff member.
+          <br />
+          • <strong>Status</strong> indicates progress (Pending, In Progress, Resolved)  
+          <br />
+          • <strong>Priority</strong> shows urgency (Low → Critical)  
+          <br />
+          • Helps monitor workload and response efficiency  
+        </p>
+      </div>
+
       {/* CONTENT */}
       {data.length === 0 ? (
         <p style={{ color: "#6b7280" }}>No grievances found</p>
@@ -114,7 +127,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "25px"
+    marginBottom: "20px"
   },
 
   subText: {
@@ -130,6 +143,18 @@ const styles = {
     borderRadius: "8px",
     cursor: "pointer",
     fontWeight: "600"
+  },
+
+  /* ✅ NEW */
+  helperBox: {
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    padding: "15px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    color: "#374151",
+    marginBottom: "25px",
+    lineHeight: "1.6"
   },
 
   grid: {
