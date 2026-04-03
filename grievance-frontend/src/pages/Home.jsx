@@ -1,31 +1,33 @@
 import { useNavigate } from "react-router-dom";
+import "./Home.css";
 
 export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <div style={styles.container}>
-      <div style={styles.navbar}>
-        <div style={styles.logo}>SmartGrievance</div>
-        <div style={styles.navLinks}>
-          <span style={styles.navLink} onClick={() => navigate("/login")}>Login</span>
-          <button style={styles.navBtn} onClick={() => navigate("/join-system")}>Join System</button>
+    <div style={styles.container} className="home-container">
+      <div style={styles.navbar} className="home-navbar">
+        <div style={styles.logo} className="home-logo">SmartGrievance</div>
+        <div style={styles.navLinks} className="home-navLinks">
+          <span style={styles.navLink} className="home-navLink" onClick={() => navigate("/login")}>Login</span>
+          <button style={styles.navBtn} className="home-navBtn" onClick={() => navigate("/join-system")}>Join System</button>
         </div>
       </div>
 
-      <div style={styles.heroSection}>
-        <div style={styles.textContent}>
-          <div style={styles.badge}>v2.0 Approved Production</div>
-          <h1 style={styles.title}>
-            Next-Gen Grievance <span style={styles.highlight}>Management</span>
+      <div style={styles.heroSection} className="home-heroSection">
+        <div style={styles.textContent} className="home-textContent">
+          <div style={styles.badge} className="home-badge">v2.0 Approved Production</div>
+          <h1 style={styles.title} className="home-title">
+            Next-Gen Grievance <span style={styles.highlight} className="home-highlight">Management</span>
           </h1>
-          <p style={styles.subtitle}>
+          <p style={styles.subtitle} className="home-subtitle">
             A fully transparent, streamlined platform to escalate and resolve issues instantly. Premium level service mapping.
           </p>
 
-          <div style={styles.buttonGroup}>
+          <div style={styles.buttonGroup} className="home-buttonGroup">
             <button 
               style={styles.primaryBtn} 
+              className="home-primaryBtn"
               onClick={() => navigate("/create-system")}
               onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
               onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
@@ -34,6 +36,7 @@ export default function Home() {
             </button>
             <button 
               style={styles.secondaryBtn} 
+              className="home-secondaryBtn"
               onClick={() => navigate("/join-system")}
               onMouseOver={(e) => e.target.style.background = '#f3f4f6'}
               onMouseOut={(e) => e.target.style.background = '#ffffff'}
@@ -43,8 +46,8 @@ export default function Home() {
           </div>
         </div>
         
-        <div style={styles.imageContent}>
-          <img src="/hero_illustration.png" alt="Hero Illustration" style={styles.heroImage} />
+        <div style={styles.imageContent} className="home-imageContent">
+          <img src="/hero_illustration.png" alt="Hero Illustration" style={styles.heroImage} className="home-heroImage" />
         </div>
       </div>
     </div>

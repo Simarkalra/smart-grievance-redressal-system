@@ -1,0 +1,72 @@
+/* Mobile responsiveness for Home.jsx */
+@media screen and (max-width: 768px) {
+  .home-navbar {
+    padding: 15px 20px !important;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .home-logo {
+    font-size: 24px !important;
+  }
+  
+  .home-navLinks {
+    gap: 15px !important;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap; /* Prevent overlap if screen is super small */
+  }
+
+  .home-heroSection {
+    padding: 40px 20px !important;
+    gap: 30px !important;
+    justify-content: center !important;
+  }
+
+  .home-textContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home-title {
+    font-size: 38px !important;
+    text-align: center;
+  }
+
+  .home-subtitle {
+    font-size: 16px !important;
+    text-align: center;
+    margin-bottom: 30px !important;
+  }
+
+  .home-badge {
+    display: block !important;
+    text-align: center;
+    margin: 0 auto 20px auto !important;
+    width: fit-content;
+  }
+
+  .home-buttonGroup {
+    flex-direction: column;
+    gap: 15px !important;
+    align-items: stretch !important;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .home-buttonGroup button {
+    width: 100%;
+    padding: 14px 24px !important;
+  }
+
+  .home-imageContent {
+    margin-top: 20px;
+  }
+
+  .home-imageContent img {
+    max-width: 100% !important;
+    transform: none !important; /* Remove perspective rotation on mobile for better fit */
+  }
+}
