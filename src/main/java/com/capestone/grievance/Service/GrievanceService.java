@@ -169,7 +169,7 @@ public Grievance registerGrievance(Grievance grievance, Long userId) {
        User reporter = userRepository.findById(userId)
     .orElseThrow(() -> new RuntimeException("User not found"));
 
-grievance.setUser(reporter);
+grievance.setReportedBy(reporter);
 grievance.setOrganization(reporter.getOrganization());
 
 // 3. Find staff

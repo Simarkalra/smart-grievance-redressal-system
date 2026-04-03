@@ -95,7 +95,7 @@ public class Grievance {
     public void setOrganization(Organization organization) { this.organization = organization; }
 
     public void setUser(User reporter) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.reportedBy = reporter;
     }
 
     // ===== ENUMS =====
