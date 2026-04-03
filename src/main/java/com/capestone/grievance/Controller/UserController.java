@@ -96,13 +96,26 @@ public ResponseEntity<?> registerUserWithOrg(
 @PostMapping("/change-password")
 public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
 
-    User existingUser = userService.findByUsername(request.getUsername());
-
-    if (existingUser == null) {
-        return ResponseEntity.badRequest().body("User not found");
+    if (request.getOrganizationId() == null) {
+        return ResponseEntity.badRequest().body("Organization ID is required");
     }
 
-    existingUser.setPassword(request.getPassword());
+    Optional<Organization> orgOpt = organizationRepository.findById(request.getOrganizationId());
+    if (!orgOpt.isPresent()) {
+        return ResponseEntity.status(401).body("Organization not found");
+    }
+
+    User existingUser = userService.findByUsernameAndOrganization(request.getUsername(), orgOpt.get());
+
+    if (existingUser == null) {
+        return ResponseEntity.status(404).body("User not found in this organization");
+    }
+
+    if (!existingUser.getPassword().equals(request.getOldPassword())) {
+        return ResponseEntity.status(401).body("Incorrect current password");
+    }
+
+    existingUser.setPassword(request.getNewPassword());
     userService.updateUser(existingUser);
 
     return ResponseEntity.ok("Password updated successfully");

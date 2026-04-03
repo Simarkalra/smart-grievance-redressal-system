@@ -9,10 +9,12 @@ export default function Login() {
   const [data, setData] = useState({
     username: "",
     password: "",
+    newPassword: "",
     organizationId: ""
   });
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState({ isOpen: false, title: "", message: "", type: "info" });
+  const [isChangePasswordMode, setIsChangePasswordMode] = useState(false);
 
   const handleLogin = async () => {
     if (!data.username || !data.password || !data.organizationId) {
@@ -53,6 +55,29 @@ export default function Login() {
     }
   };
 
+  const handleChangePassword = async () => {
+    if (!data.username || !data.password || !data.newPassword || !data.organizationId) {
+      setModal({ isOpen: true, title: "Missing Fields", message: "Please fill all fields", type: "error" });
+      return;
+    }
+    setLoading(true);
+    try {
+      await API.post("/user/change-password", {
+        username: data.username,
+        oldPassword: data.password,
+        newPassword: data.newPassword,
+        organizationId: data.organizationId
+      });
+      setModal({ isOpen: true, title: "Success", message: "Password updated successfully!", type: "success" });
+      setIsChangePasswordMode(false);
+      setData({ ...data, password: "", newPassword: "" });
+    } catch (err) {
+      setModal({ isOpen: true, title: "Error", message: err.response?.data || "Failed to update password", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={styles.container}>
 
@@ -64,24 +89,27 @@ export default function Login() {
       </div>
 
       <div style={styles.card}>
-        <h2 style={styles.title}>Welcome Back</h2>
+        <h2 style={styles.title}>
+          {isChangePasswordMode ? "Change Password" : "Welcome Back"}
+        </h2>
 
         <p style={styles.subtitle}>
-          Sign in to your organization
+          {isChangePasswordMode ? "Update your credentials securely" : "Sign in to your organization"}
         </p>
 
-        {/* ✅ NEW: Instruction Box */}
-        <div style={styles.helperBox}>
-          <p>
-            Login using the credentials provided during registration.
-            <br />
-            <strong>Admin</strong> → Manage system, assign staff  
-            <br />
-            <strong>Staff</strong> → Handle assigned grievances  
-            <br />
-            <strong>User</strong> → Submit and track complaints
-          </p>
-        </div>
+        {!isChangePasswordMode && (
+          <div style={styles.helperBox}>
+            <p>
+              Login using the credentials provided during registration.
+              <br />
+              <strong>Admin</strong> → Manage system, assign staff  
+              <br />
+              <strong>Staff</strong> → Handle assigned grievances  
+              <br />
+              <strong>User</strong> → Submit and track complaints
+            </p>
+          </div>
+        )}
 
         <input
           style={styles.input}
@@ -95,12 +123,24 @@ export default function Login() {
         <input
           style={styles.input}
           type="password"
-          placeholder="Password"
+          placeholder={isChangePasswordMode ? "Current Password" : "Password"}
           value={data.password}
           onChange={(e) =>
             setData({ ...data, password: e.target.value })
           }
         />
+
+        {isChangePasswordMode && (
+          <input
+            style={styles.input}
+            type="password"
+            placeholder="New Password"
+            value={data.newPassword}
+            onChange={(e) =>
+              setData({ ...data, newPassword: e.target.value })
+            }
+          />
+        )}
 
         <input
           style={styles.input}
@@ -111,14 +151,21 @@ export default function Login() {
           }
         />
 
-        {/* ✅ SMALL HINT */}
-        <p style={styles.hintText}>
-          ℹ️ Organization ID was provided during system creation or registration
-        </p>
-
-        <button style={styles.button} onClick={handleLogin} disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+        <button 
+          style={styles.button} 
+          onClick={isChangePasswordMode ? handleChangePassword : handleLogin} 
+          disabled={loading}
+        >
+          {loading ? "Processing..." : (isChangePasswordMode ? "Update Password" : "Login")}
         </button>
+
+        <button 
+          style={{...styles.secondaryBtn, border: "none", background: "transparent", color: "#4f46e5", fontSize: "14px", marginTop: "15px"}} 
+          onClick={() => setIsChangePasswordMode(!isChangePasswordMode)}
+        >
+          {isChangePasswordMode ? "Back to Login" : "Forgot / Change Password?"}
+        </button>
+
       </div>
 
       <Modal
