@@ -76,8 +76,16 @@ public ResponseEntity<?> registerUserWithOrg(
         @RequestParam Long orgId,
         @RequestBody User user) {
 
-    Organization org = organizationRepository.findById(orgId)
-            .orElseThrow(() -> new RuntimeException("Organization not found"));
+    Optional<Organization> orgOpt = organizationRepository.findById(orgId);
+    if (!orgOpt.isPresent()) {
+        return ResponseEntity.status(400).body("Organization not found");
+    }
+    Organization org = orgOpt.get();
+
+    User existingUser = userService.findByUsernameAndOrganization(user.getUsername(), org);
+    if (existingUser != null) {
+        return ResponseEntity.status(400).body("Username already exists in this organization");
+    }
 
     user.setOrganization(org);
 
@@ -115,9 +123,12 @@ try {
 
     
 
-    // ✅ FIX: fetch user WITH org
-    Organization org = organizationRepository.findById(orgId)
-            .orElseThrow(() -> new RuntimeException("Organization not found"));
+    // ✅ FIX: fetch user WITH org gracefully
+    Optional<Organization> orgOpt = organizationRepository.findById(orgId);
+    if (!orgOpt.isPresent()) {
+        return ResponseEntity.status(401).body("Organization not found");
+    }
+    Organization org = orgOpt.get();
 
     User existingUser = userService.findByUsernameAndOrganization(username, org);
 

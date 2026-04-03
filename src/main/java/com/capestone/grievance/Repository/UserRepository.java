@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
     List<User> findByCategoriesContainingAndOrganizationId(Category category, Long orgId);
 
-    User findByUsernameAndOrganization(String username, Organization organization);
+    List<User> findByUsernameAndOrganization(String username, Organization organization);
 
     List<User> findByOrganizationId(Long orgId);
 

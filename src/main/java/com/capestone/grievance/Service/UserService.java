@@ -27,7 +27,8 @@ public class UserService {
 
     // ✅ FIND USER BY USERNAME + ORG
     public User findByUsernameAndOrganization(String username, Organization org) {
-        return userRepository.findByUsernameAndOrganization(username, org);
+        List<User> users = userRepository.findByUsernameAndOrganization(username, org);
+        return users.isEmpty() ? null : users.get(0);
     }
 
     // ✅ FIND USER BY USERNAME
