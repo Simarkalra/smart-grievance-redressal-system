@@ -10,6 +10,7 @@ export default function Login() {
     password: "",
     organizationId: ""
   });
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!data.username || !data.password || !data.organizationId) {
@@ -17,6 +18,7 @@ export default function Login() {
       return;
     }
 
+    setLoading(true);
     try {
       const res = await API.post("/user/login", data);
       const user = res.data;
@@ -34,16 +36,26 @@ export default function Login() {
     } catch (err) {
       console.error(err);
       alert("❌ Invalid credentials or organization ID");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div style={styles.container}>
+
+      <div 
+        style={styles.backButton} 
+        onClick={() => navigate("/")}
+      >
+        ← Back to Home
+      </div>
+
       <div style={styles.card}>
-        <h2 style={styles.title}>Login</h2>
+        <h2 style={styles.title}>Welcome Back</h2>
 
         <p style={styles.subtitle}>
-          Access your organization dashboard
+          Sign in to your organization
         </p>
 
         {/* ✅ NEW: Instruction Box */}
@@ -92,15 +104,8 @@ export default function Login() {
           ℹ️ Organization ID was provided during system creation or registration
         </p>
 
-        <button style={styles.button} onClick={handleLogin}>
-          Login
-        </button>
-
-        <button
-          style={styles.secondaryBtn}
-          onClick={() => navigate("/")}
-        >
-          Back to Home
+        <button style={styles.button} onClick={handleLogin} disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
         </button>
       </div>
     </div>
@@ -110,87 +115,98 @@ export default function Login() {
 const styles = {
   container: {
     minHeight: "100vh",
+    fontFamily: "'Inter', sans-serif",
+    background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(to right, #eef2f7, #f8fafc)",
     padding: "20px"
   },
-
+  backButton: {
+    cursor: "pointer",
+    color: "#4f46e5",
+    fontWeight: "600",
+    marginBottom: "20px",
+    alignSelf: "flex-start",
+    marginLeft: "max(calc(50vw - 200px), 20px)",
+    fontSize: "15px",
+    transition: "color 0.2s"
+  },
   card: {
-    width: "370px",
-    background: "#fff",
-    padding: "30px",
-    borderRadius: "14px",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-    border: "1px solid #e5e7eb",
+    width: "400px",
+    background: "rgba(255, 255, 255, 0.85)",
+    backdropFilter: "blur(12px)",
+    padding: "40px",
+    borderRadius: "20px",
+    boxShadow: "0 20px 40px -10px rgba(0,0,0,0.1)",
+    border: "1px solid rgba(255, 255, 255, 0.6)",
     textAlign: "center"
   },
-
   title: {
-    fontSize: "24px",
-    fontWeight: "600",
     marginBottom: "8px",
-    color: "#1f2937"
+    fontSize: "26px",
+    fontWeight: "700",
+    color: "#0f172a"
   },
-
   subtitle: {
-    fontSize: "14px",
-    color: "#6b7280",
-    marginBottom: "15px"
+    fontSize: "15px",
+    color: "#475569",
+    marginBottom: "20px"
   },
-
-  /* ✅ NEW */
   helperBox: {
-    background: "#f1f5f9",
-    border: "1px solid #e2e8f0",
-    padding: "12px",
-    borderRadius: "8px",
-    fontSize: "13px",
-    color: "#374151",
-    marginBottom: "15px",
-    lineHeight: "1.5",
+    background: "rgba(241, 245, 249, 0.8)",
+    border: "1px solid rgba(226, 232, 240, 0.8)",
+    padding: "16px",
+    borderRadius: "12px",
+    fontSize: "14px",
+    color: "#334155",
+    marginBottom: "20px",
+    lineHeight: "1.6",
     textAlign: "left"
   },
-
   input: {
     width: "100%",
-    padding: "10px",
-    marginBottom: "12px",
-    borderRadius: "8px",
-    border: "1px solid #d1d5db",
-    fontSize: "14px",
-    outline: "none"
+    padding: "12px 14px",
+    marginBottom: "16px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
+    fontSize: "15px",
+    outline: "none",
+    transition: "border 0.2s, box-shadow 0.2s",
+    background: "#fff"
   },
-
-  /* ✅ NEW */
   hintText: {
-    fontSize: "12px",
-    color: "#6b7280",
+    fontSize: "13px",
+    color: "#64748b",
     marginBottom: "12px",
-    textAlign: "left"
+    textAlign: "left",
+    lineHeight: "1.4"
   },
-
   button: {
     width: "100%",
-    padding: "12px",
-    background: "linear-gradient(to right, #2563eb, #3b82f6)",
+    padding: "14px",
+    background: "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
     color: "#fff",
     border: "none",
-    borderRadius: "8px",
-    fontWeight: "600",
+    borderRadius: "10px",
+    fontWeight: "700",
+    fontSize: "16px",
     cursor: "pointer",
-    marginBottom: "10px"
+    boxShadow: "0 10px 15px -3px rgba(79, 70, 229, 0.3)",
+    transition: "transform 0.2s, box-shadow 0.2s"
   },
-
   secondaryBtn: {
     width: "100%",
-    padding: "10px",
-    background: "#e5e7eb",
-    color: "#111827",
-    border: "none",
-    borderRadius: "8px",
-    fontWeight: "600",
-    cursor: "pointer"
+    padding: "14px",
+    marginTop: "12px",
+    background: "#ffffff",
+    color: "#312e81",
+    border: "2px solid #e0e7ff",
+    borderRadius: "10px",
+    fontWeight: "700",
+    fontSize: "16px",
+    cursor: "pointer",
+    transition: "background 0.2s, border 0.2s"
   }
 };

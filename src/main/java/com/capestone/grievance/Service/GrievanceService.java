@@ -156,21 +156,34 @@ public List<Grievance> getByReportedUser(Long id) {
 public Grievance registerGrievance(Grievance grievance, Long userId) {
 
     try {
-        // ✅ 1. Get reporter
-    
+        User reporter = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-       
+        Category category;
+        Long requestedCategoryId = grievance.getCategory().getId();
 
-        Category category = categoryRepository.findById(grievance.getCategory().getId())
+        if (requestedCategoryId != null && requestedCategoryId == -1) {
+            Organization org = reporter.getOrganization();
+            List<Category> allCategories = categoryRepository.findByOrganizationIdOrderByNameAsc(org.getId());
+            category = allCategories.stream()
+                        .filter(c -> c.getName().equalsIgnoreCase("Other") || c.getName().equalsIgnoreCase("Other / Not Listed"))
+                        .findFirst()
+                        .orElse(null);
+
+            if (category == null) {
+                category = new Category();
+                category.setName("Other");
+                category.setOrganization(org);
+                category = categoryRepository.save(category);
+            }
+        } else {
+            category = categoryRepository.findById(requestedCategoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
+        }
 
         grievance.setCategory(category);
-
-       User reporter = userRepository.findById(userId)
-    .orElseThrow(() -> new RuntimeException("User not found"));
-
-grievance.setReportedBy(reporter);
-grievance.setOrganization(reporter.getOrganization());
+        grievance.setReportedBy(reporter);
+        grievance.setOrganization(reporter.getOrganization());
 
 // 3. Find staff
 List<User> users = userRepository

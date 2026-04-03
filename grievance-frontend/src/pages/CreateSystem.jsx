@@ -42,16 +42,20 @@ export default function CreateSystem() {
 
   return (
     <div style={styles.container}>
+      <div 
+        style={styles.backButton} 
+        onClick={() => navigate("/")}
+      >
+        ← Back to Home
+      </div>
 
       <div style={styles.card}>
-
-        <h2 style={styles.title}>Create New System</h2>
+        <h2 style={styles.title}>Create Workspace</h2>
 
         <p style={styles.subtitle}>
           Setup your organization and generate admin credentials
         </p>
 
-        {/* ✅ NEW: Instruction Box */}
         <div style={styles.helperBox}>
           <p>
             Enter your organization name to create a new system.
@@ -68,29 +72,18 @@ export default function CreateSystem() {
           disabled={loading}
         />
 
-        <div style={styles.buttonGroup}>
-          <button
-            style={styles.primaryBtn}
-            onClick={handleCreate}
-            disabled={loading}
-          >
-            {loading ? "Creating..." : "Create Organization"}
-          </button>
+        <button
+          style={styles.button}
+          onClick={handleCreate}
+          disabled={loading}
+        >
+          {loading ? "Creating..." : "Create Organization"}
+        </button>
 
-          <button
-            style={styles.secondaryBtn}
-            onClick={() => navigate("/")}
-          >
-            Back
-          </button>
-        </div>
-
-        {/* ✅ SUCCESS CARD */}
         {createdData && (
           <div style={styles.successCard}>
             <h3 style={{ marginBottom: 10 }}>✅ Organization Created</h3>
 
-            {/* 🔴 IMPORTANT NOTE */}
             <p style={styles.warningText}>
               ⚠️ Please save these credentials. They will not be shown again.
             </p>
@@ -118,9 +111,7 @@ export default function CreateSystem() {
             </button>
           </div>
         )}
-
       </div>
-
     </div>
   );
 }
@@ -128,85 +119,66 @@ export default function CreateSystem() {
 const styles = {
   container: {
     minHeight: "100vh",
+    fontFamily: "'Inter', sans-serif",
+    background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(to right, #eef2f7, #f8fafc)",
     padding: "20px"
   },
-
+  backButton: {
+    cursor: "pointer",
+    color: "#4f46e5",
+    fontWeight: "600",
+    marginBottom: "20px",
+    alignSelf: "flex-start",
+    marginLeft: "max(calc(50vw - 200px), 20px)",
+    fontSize: "15px",
+    transition: "color 0.2s"
+  },
   card: {
-    width: "420px",
-    background: "#fff",
-    padding: "30px",
-    borderRadius: "14px",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-    border: "1px solid #e5e7eb",
+    width: "400px",
+    background: "rgba(255, 255, 255, 0.85)",
+    backdropFilter: "blur(12px)",
+    padding: "40px",
+    borderRadius: "20px",
+    boxShadow: "0 20px 40px -10px rgba(0,0,0,0.1)",
+    border: "1px solid rgba(255, 255, 255, 0.6)",
     textAlign: "center"
   },
-
   title: {
-    fontSize: "24px",
-    fontWeight: "600",
     marginBottom: "8px",
-    color: "#1f2937"
+    fontSize: "26px",
+    fontWeight: "700",
+    color: "#0f172a"
   },
-
   subtitle: {
-    fontSize: "14px",
-    color: "#6b7280",
-    marginBottom: "15px"
-  },
-
-  /* ✅ NEW */
-  helperBox: {
-    background: "#f1f5f9",
-    border: "1px solid #e2e8f0",
-    padding: "12px",
-    borderRadius: "8px",
-    fontSize: "14px",
-    color: "#374151",
-    marginBottom: "20px",
-    lineHeight: "1.5"
-  },
-
-  input: {
-    width: "100%",
-    padding: "12px",
-    borderRadius: "8px",
-    border: "1px solid #d1d5db",
-    fontSize: "14px",
-    marginBottom: "20px",
-    outline: "none"
-  },
-
-  buttonGroup: {
-    display: "flex",
-    gap: "10px",
-    justifyContent: "center",
+    fontSize: "15px",
+    color: "#475569",
     marginBottom: "20px"
   },
-
-  primaryBtn: {
-    flex: 1,
-    padding: "12px",
-    background: "linear-gradient(to right, #2563eb, #3b82f6)",
-    color: "#fff",
-    border: "none",
-    borderRadius: "8px",
-    fontWeight: "600",
-    cursor: "pointer"
+  helperBox: {
+    background: "rgba(241, 245, 249, 0.8)",
+    border: "1px solid rgba(226, 232, 240, 0.8)",
+    padding: "16px",
+    borderRadius: "12px",
+    fontSize: "14px",
+    color: "#334155",
+    marginBottom: "20px",
+    lineHeight: "1.6",
+    textAlign: "left"
   },
-
-  secondaryBtn: {
-    flex: 1,
-    padding: "12px",
-    background: "#e5e7eb",
-    color: "#111827",
-    border: "none",
-    borderRadius: "8px",
-    fontWeight: "600",
-    cursor: "pointer"
+  input: {
+    width: "100%",
+    padding: "12px 14px",
+    marginBottom: "16px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
+    fontSize: "15px",
+    outline: "none",
+    transition: "border 0.2s, box-shadow 0.2s",
+    background: "#fff"
   },
 
   successCard: {

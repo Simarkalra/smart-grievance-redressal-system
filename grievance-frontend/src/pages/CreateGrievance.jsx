@@ -13,6 +13,7 @@ export default function CreateGrievance() {
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -58,6 +59,8 @@ export default function CreateGrievance() {
         return;
       }
 
+      setLoading(true);
+
       const payload = {
         description: data.description,
         category: { id: parseInt(selectedCategory) }
@@ -83,12 +86,22 @@ export default function CreateGrievance() {
         message: "Failed to submit grievance",
         type: "error"
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Create Grievance</h2>
+      <div 
+        style={styles.backButton} 
+        onClick={() => navigate("/dashboard")}
+      >
+        ← Back to Dashboard
+      </div>
+
+      <div style={styles.card}>
+        <h2 style={styles.title}>Create Grievance</h2>
 
       {/* ✅ NEW: INSTRUCTION BOX */}
       <div style={styles.helperBox}>
@@ -115,6 +128,7 @@ export default function CreateGrievance() {
             {c.name}
           </option>
         ))}
+        <option value="-1">Other / Not Listed</option>
       </select>
 
       {/* ✅ SMALL HELP */}
@@ -140,8 +154,8 @@ export default function CreateGrievance() {
 
       {/* BUTTONS */}
       <div style={styles.buttonRow}>
-        <button onClick={submit} style={styles.primaryBtn}>
-          Submit
+        <button onClick={submit} style={{ ...styles.primaryBtn, opacity: loading ? 0.7 : 1 }} disabled={loading}>
+          {loading ? "Submitting..." : "Submit"}
         </button>
 
         <button
@@ -151,8 +165,7 @@ export default function CreateGrievance() {
           Cancel
         </button>
       </div>
-
-      {/* MODAL */}
+      </div>
       <Modal
         isOpen={modal.isOpen}
         title={modal.title}
@@ -170,76 +183,114 @@ export default function CreateGrievance() {
 const styles = {
   container: {
     minHeight: "100vh",
-    padding: "30px",
-    background: "linear-gradient(to right, #eef2f7, #f8fafc)"
+    fontFamily: "'Inter', sans-serif",
+    background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "20px"
   },
-
+  card: {
+    width: "100%",
+    maxWidth: "500px",
+    background: "rgba(255, 255, 255, 0.85)",
+    backdropFilter: "blur(12px)",
+    padding: "40px",
+    borderRadius: "20px",
+    boxShadow: "0 20px 40px -10px rgba(0,0,0,0.1)",
+    border: "1px solid rgba(255, 255, 255, 0.6)"
+  },
+  backButton: {
+    cursor: "pointer",
+    color: "#4f46e5",
+    fontWeight: "600",
+    marginBottom: "20px",
+    alignSelf: "flex-start",
+    marginLeft: "max(calc(50vw - 250px), 20px)",
+    fontSize: "15px",
+    transition: "color 0.2s"
+  },
   title: {
     marginBottom: "20px",
-    color: "#1f2937"
+    fontSize: "26px",
+    fontWeight: "700",
+    color: "#0f172a",
+    textAlign: "center"
   },
-
-  /* ✅ NEW */
   helperBox: {
-    background: "#f1f5f9",
-    border: "1px solid #e2e8f0",
-    padding: "15px",
-    borderRadius: "10px",
+    background: "rgba(241, 245, 249, 0.8)",
+    border: "1px solid rgba(226, 232, 240, 0.8)",
+    padding: "16px",
+    borderRadius: "12px",
     fontSize: "14px",
-    color: "#374151",
+    color: "#334155",
     marginBottom: "20px",
     lineHeight: "1.6"
   },
-
   label: {
     display: "block",
-    marginBottom: "5px",
-    fontWeight: "500"
+    marginBottom: "6px",
+    fontWeight: "600",
+    color: "#1e293b",
+    fontSize: "14px"
   },
-
   input: {
     width: "100%",
-    padding: "10px",
-    borderRadius: "6px",
-    border: "1px solid #ccc",
-    marginBottom: "5px"
+    padding: "12px 14px",
+    marginBottom: "6px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
+    fontSize: "15px",
+    outline: "none",
+    transition: "border 0.2s, box-shadow 0.2s",
+    background: "#fff"
   },
-
   textarea: {
     width: "100%",
     minHeight: "120px",
-    padding: "10px",
-    borderRadius: "6px",
-    border: "1px solid #ccc"
+    padding: "12px 14px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
+    fontSize: "15px",
+    outline: "none",
+    transition: "border 0.2s, box-shadow 0.2s",
+    background: "#fff",
+    resize: "vertical"
   },
-
-  /* ✅ NEW */
   smallText: {
-    fontSize: "12px",
-    color: "#6b7280",
-    marginBottom: "15px"
+    fontSize: "13px",
+    color: "#64748b",
+    marginBottom: "20px"
   },
-
   buttonRow: {
-    marginTop: "15px",
+    marginTop: "25px",
     display: "flex",
-    gap: "10px"
+    gap: "15px"
   },
-
   primaryBtn: {
-    background: "#2563eb",
+    flex: 1,
+    padding: "14px",
+    background: "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
     color: "#fff",
     border: "none",
-    padding: "10px 16px",
-    borderRadius: "6px",
-    cursor: "pointer"
+    borderRadius: "10px",
+    fontWeight: "700",
+    fontSize: "16px",
+    cursor: "pointer",
+    boxShadow: "0 10px 15px -3px rgba(79, 70, 229, 0.3)",
+    transition: "transform 0.2s, box-shadow 0.2s"
   },
-
   secondaryBtn: {
-    background: "#e5e7eb",
-    border: "none",
-    padding: "10px 16px",
-    borderRadius: "6px",
-    cursor: "pointer"
+    flex: 1,
+    padding: "14px",
+    background: "#ffffff",
+    color: "#312e81",
+    border: "2px solid #e0e7ff",
+    borderRadius: "10px",
+    fontWeight: "700",
+    fontSize: "16px",
+    cursor: "pointer",
+    transition: "background 0.2s, border 0.2s"
   }
-};
+};
