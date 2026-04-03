@@ -138,7 +138,8 @@ const styles = {
     transition: "color 0.2s"
   },
   card: {
-    width: "400px",
+    width: "100%",
+    maxWidth: "400px",
     background: "rgba(255, 255, 255, 0.85)",
     backdropFilter: "blur(12px)",
     padding: "40px",

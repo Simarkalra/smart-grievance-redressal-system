@@ -150,7 +150,7 @@ export default function AssigneePage() {
         placeholder="Search staff..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        style={{ ...styles.input, width: "300px", marginBottom: 20 }}
+        style={{ ...styles.input, width: "100%", maxWidth: "300px", marginBottom: 20 }}
       />
 
       {/* TABLE */}

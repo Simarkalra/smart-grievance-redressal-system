@@ -199,7 +199,8 @@ const styles = {
     padding: "8px",
     borderRadius: "6px",
     border: "1px solid #ccc",
-    width: "250px"
+    width: "100%",
+    maxWidth: "250px"
   },
 
   clearBtn: {

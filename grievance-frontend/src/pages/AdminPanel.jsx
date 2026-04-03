@@ -132,7 +132,8 @@ const styles = {
   },
 
   card: {
-    width: "260px",
+    width: "100%",
+    maxWidth: "260px",
     padding: "20px",
     borderRadius: "12px",
     background: "#ffffff",
