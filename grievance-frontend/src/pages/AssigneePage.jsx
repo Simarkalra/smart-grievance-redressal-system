@@ -132,6 +132,7 @@ export default function AssigneePage() {
           {categories.map(c => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
+          <option value="-1">Other / Not Listed</option>
         </select>
 
         <button style={styles.primaryBtn} onClick={create}>
@@ -197,6 +198,7 @@ export default function AssigneePage() {
                         {c.name}
                       </option>
                     ))}
+                    <option value="-1">Other / Not Listed</option>
                   </select>
                 </td>
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import Modal from "../components/Modal";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,10 +12,16 @@ export default function Login() {
     organizationId: ""
   });
   const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
   const handleLogin = async () => {
     if (!data.username || !data.password || !data.organizationId) {
-      alert("Please fill all fields");
+      setModal({
+        isOpen: true,
+        title: "Missing Fields",
+        message: "Please fill all fields",
+        type: "error"
+      });
       return;
     }
 
@@ -35,7 +42,12 @@ export default function Login() {
 
     } catch (err) {
       console.error(err);
-      alert("❌ Invalid credentials or organization ID");
+      setModal({
+        isOpen: true,
+        title: "Login Failed",
+        message: "Invalid credentials or organization ID",
+        type: "error"
+      });
     } finally {
       setLoading(false);
     }
@@ -108,6 +120,14 @@ export default function Login() {
           {loading ? "Logging in..." : "Login"}
         </button>
       </div>
+
+      <Modal
+        isOpen={modal.isOpen}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+      />
     </div>
   );
 }

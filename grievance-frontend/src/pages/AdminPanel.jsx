@@ -43,7 +43,7 @@ export default function AdminPanel() {
           <h3>Manage Categories</h3>
           <p>Create grievance categories and define structure</p>
           <button style={styles.btn} onClick={() => navigate("/admin/categories")}>
-            Go
+            Manage
           </button>
         </div>
 
@@ -52,7 +52,7 @@ export default function AdminPanel() {
           <h3>Manage Assignees</h3>
           <p>Add staff and assign them to categories</p>
           <button style={styles.btn} onClick={() => navigate("/admin/assignees")}>
-            Go
+            Manage
           </button>
         </div>
 
@@ -61,7 +61,7 @@ export default function AdminPanel() {
           <h3>Keyword Rules</h3>
           <p>Set keywords and define priority levels</p>
           <button style={styles.btn} onClick={() => navigate("/admin/keywords")}>
-            Go
+            Manage
           </button>
         </div>
 
@@ -70,7 +70,7 @@ export default function AdminPanel() {
           <h3>View Grievances</h3>
           <p>Track and monitor all complaints in your system</p>
           <button style={styles.btn} onClick={() => navigate("/admin/all-staff")}>
-            View
+            View All
           </button>
         </div>
 

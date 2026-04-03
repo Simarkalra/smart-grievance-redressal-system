@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
+import Modal from "../components/Modal";
 
 export default function JoinSystem() {
 
@@ -11,6 +12,7 @@ export default function JoinSystem() {
     orgId: ""
   });
   const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
   const navigate = useNavigate();
 
@@ -26,10 +28,20 @@ export default function JoinSystem() {
         }
       );
 
-      alert("Registered Successfully");
+      setModal({
+        isOpen: true,
+        title: "Success",
+        message: "Registered Successfully. You can now login.",
+        type: "success"
+      });
 
     } catch {
-      alert("Error registering. Username might be duplicate or org ID invalid.");
+      setModal({
+        isOpen: true,
+        title: "Registration Failed",
+        message: "Username might be duplicate or org ID invalid.",
+        type: "error"
+      });
     } finally {
       setLoading(false);
     }
@@ -104,6 +116,16 @@ export default function JoinSystem() {
         </button>
       </div>
 
+      <Modal
+        isOpen={modal.isOpen}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+        onClose={() => {
+          setModal({ ...modal, isOpen: false });
+          if (modal.type === "success") navigate("/login");
+        }}
+      />
     </div>
   );
 }

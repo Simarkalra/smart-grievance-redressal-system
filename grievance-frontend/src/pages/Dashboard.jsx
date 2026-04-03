@@ -17,15 +17,20 @@ export default function Dashboard() {
       <div style={styles.content}>
         <div style={styles.header}>
           <h2 style={styles.sectionTitle}>Overview</h2>
-          <button
-            style={styles.logout}
-            onClick={() => {
-              localStorage.clear();
-              navigate("/");
-            }}
-          >
-            Logout
-          </button>
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <span style={styles.backLink} onClick={() => navigate("/")}>
+              ← Back to Main Menu
+            </span>
+            <button
+              style={styles.logout}
+              onClick={() => {
+                localStorage.clear();
+                navigate("/");
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         <div style={styles.grid}>
@@ -53,17 +58,6 @@ export default function Dashboard() {
             </button>
           </div>
 
-          <div style={styles.card}>
-             <div style={styles.cardIcon}>🏠</div>
-            <h3 style={styles.cardTitle}>Back to Home</h3>
-            <p style={styles.cardDesc}>Return to the main landing page to join other systems.</p>
-            <button
-              style={styles.secondaryBtn}
-              onClick={() => navigate("/")}
-            >
-              Go Home
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -193,5 +187,12 @@ const styles = {
     fontWeight: "700",
     cursor: "pointer",
     transition: "background 0.2s"
+  },
+  backLink: {
+    cursor: "pointer",
+    color: "#4f46e5",
+    fontWeight: "600",
+    fontSize: "15px",
+    transition: "color 0.2s"
   }
 };

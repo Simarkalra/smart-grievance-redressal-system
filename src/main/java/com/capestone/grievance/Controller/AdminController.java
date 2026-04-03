@@ -60,8 +60,24 @@ public ResponseEntity<?> assignCategory(@RequestBody Map<String, String> req) {
     User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
-    Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new RuntimeException("Category not found"));
+    Category category;
+    if (categoryId == -1) {
+        Organization org = user.getOrganization();
+        List<Category> allCategories = categoryRepository.findByOrganizationIdOrderByNameAsc(org.getId());
+        category = allCategories.stream()
+                .filter(c -> c.getName().equalsIgnoreCase("Other") || c.getName().equalsIgnoreCase("Other / Not Listed"))
+                .findFirst()
+                .orElse(null);
+        if (category == null) {
+            category = new Category();
+            category.setName("Other");
+            category.setOrganization(org);
+            category = categoryRepository.save(category);
+        }
+    } else {
+        category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+    }
 
     List<Category> categories = user.getCategories();
 
@@ -135,8 +151,23 @@ public ResponseEntity<?> createUser(
 
     Long categoryId = Long.parseLong(categoryIdStr);
 
-    Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new RuntimeException("Category not found"));
+    Category category;
+    if (categoryId == -1) {
+        List<Category> allCategories = categoryRepository.findByOrganizationIdOrderByNameAsc(org.getId());
+        category = allCategories.stream()
+                .filter(c -> c.getName().equalsIgnoreCase("Other") || c.getName().equalsIgnoreCase("Other / Not Listed"))
+                .findFirst()
+                .orElse(null);
+        if (category == null) {
+            category = new Category();
+            category.setName("Other");
+            category.setOrganization(org);
+            category = categoryRepository.save(category);
+        }
+    } else {
+        category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+    }
 
     User user = new User();
     user.setUsername(req.get("username"));
